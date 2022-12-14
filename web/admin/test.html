@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:500,700' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+        <style>
+            :root {
+                --main-text-color: #0b0b0b;
+            }
+            * {
+                font-family: 'Source Sans Pro', sans-serif;
+            }
+            html, body {
+                background-color: #f3f3f3;
+                color: var(--main-text-color);
+            }
+            body {
+                padding: 50px 120px;
+            }
+            h1 {
+                font-weight: normal;
+                font-size: 28px;
+            }
+            p {
+                font-size: 20px;
+            }
+            .fixed {
+                font-family: 'Source Code Pro', sans-serif;
+                font-weight: normal;
+            }
+            td {
+                height: 40px;
+                padding: 8px;
+            }
+            tr.success td:last-of-type {
+                background-color: #a3d1a5;
+            }
+            tr.failure td:last-of-type {
+                background-color: #db9f9f;
+            }
+            td:nth-child(1) {
+                width: 300px;
+            }
+            .button {
+                width: 24px;
+                border-style: solid;
+                border-width: 1px;
+                border-color: #000;
+                border-radius: 5px;
+                background-color: antiquewhite;
+                padding: 6px 10px;
+                font-family: 'Source Code Pro', sans-serif;
+                font-weight: bold;
+                text-decoration: none;
+            }
+            a:link, a:visited, a:active, a:hover {
+                color: var(--main-text-color);
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <h1><span class="fixed">eventPresent</span></h1>
+        <template><tr class="test"><td>Connect WebSocket</td><td><a href=""><div class="button">GO</div></a></td></tr></template>
+
+        <table>
+            <tr><td><p>Test Suite</p></td><td><a onclick="runtests()"><div class="button">GO</div></a></td></tr>
+        </table>
+    </body>
+    <script>
+        let apass = prompt("Admin password:");
+        
+        // nanoid
+        let nanoid = (t=21)=>crypto.getRandomValues(new Uint8Array(t)).reduce(((t,e)=>t+=(e&=63)<36?e.toString(36):e<62?(e-26).toString(36).toUpperCase():e>62?"-":"_"),"");
+    </script>
+    
+    <script type="application/javascript">
+        "use strict;"
+        let tests = [
+            { n: "Create WebSocket Client",    f: cb => { let ws = new WebSocket("ws://localhost:80/admin/ws"); cb(ws instanceof WebSocket); } },
+            { n: "Connect WebSocket Client",   f: cb => { let ws = new WebSocket("ws://localhost:80/admin/ws"); ws.onopen = function() { cb(true) }; ws.onerror = function (err) { cb(false, "Connection failed: " + err) }; } },
+        ];
+
+        let template = document.getElementsByTagName("template")[0];
+        let rowtemplate = template.content.querySelector("tr");
+        let table = document.querySelector("table");
+
+        tests.forEach(test => {
+            let row = document.importNode(rowtemplate, true);
+            row.querySelectorAll('td')[0].textContent = test.n;
+            table.appendChild(row);
+        });
+
+        function runtests() {
+            tests.forEach((test, index) => {
+                let tr = document.querySelectorAll("tr")[index+1];
+                let cb = function(success, message) {
+                    message = (typeof message === 'undefined') ? "" : message;
+                    
+                    if (success) {
+                        tr.classList.add('success');
+                        tr.querySelectorAll("td")[1].textContent = success;
+                    }
+                    else {
+                        tr.classList.add('failure');
+                        tr.querySelectorAll("td")[1].textContent = message;
+                    }
+
+                }
+                test.f(cb);
+            });
+        }
+        
+    </script>
+    
+</html>
