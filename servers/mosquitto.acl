@@ -1,0 +1,46 @@
+# IMPORTANT: we use anonymous auth (simple nanoids) for users, which only works as a limited-use
+# stage thing. For the admin app (and everything that ends up getting written to state), we 
+# enforce authentication with Mosquitto and the accompanying password file. This is important
+# because we don't enforce it within code anywhere, other than Basic Auth via nginx.
+
+# This affects access control for clients with no username.
+
+topic read $SYS/#
+
+## TESTING, FIXME
+# topic readwrite admin/in
+# topic readwrite admin/out
+
+# userin, public writes from all users, but wait, this would still be publicnode..
+# topic write user/in
+
+# state, public reads from all users; remember we have a public Node instance in front of 
+# Mosquitto where we pool all connections. See below for user/out, which only that Node
+# instance can access.
+topic read state
+# wait, should anything be public then? Mosquitto is only accessible by localhost...
+
+# $SYS/broker/clients/connected
+
+# user publicnode
+topic write user/in
+# user/out is user-specific messages, filtered by our public Node
+topic read user/out
+topic read big
+
+user adminapp
+# adminin, auth'd writes from adminapp and adminred
+topic write admin/in
+topic read admin/out
+
+user adminred
+topic readwrite admin/in
+topic read user/in
+topic readwrite admin/out
+topic readwrite user/out
+topic readwrite big
+
+# bigscreen app reads from big
+user big
+topic read big
+
