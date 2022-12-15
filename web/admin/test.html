@@ -97,7 +97,7 @@
         let tests = [
             { n: "Nano ID Create",    f: function(cb, index) { let nid = nanoid(10); cb(index, nid.length === 10, nid) } },
             { n: "Create WebSocket Client",    f: (cb, index) => { let ws = new WebSocket("ws://localhost:80/admin/ws"); cb(index, ws instanceof WebSocket); } },
-            { n: "Connect WebSocket Client",   f: (cb, index) => { let ws = new WebSocket("ws://localhost:80/admin/ws"); ws.onopen = function() { cb(index, true) }; ws.onerror = function (err) { cb(false, "Connection failed: " + err) }; } },
+            { n: "Connect WebSocket Client",   f: (cb, index) => { let ws = new WebSocket("ws://localhost:80/admin/ws"); ws.onopen = function() { cb(index, true) }; ws.onerror = function (err) { cb(index, false, "Connection failed: " + err) }; } },
             { n: "Create MQTT Client",         f: (cb, index) => { let mqtt = new Paho.MQTT.Client(location.hostname, Number(location.port), "clientId"); cb(index, mqtt instanceof Paho.MQTT.Client ) } },
             { n: "Connect MQTT Client",        f: (cb, index) => { let mqtt = new Paho.MQTT.Client(location.hostname, Number(location.port), "clientId"); mqtt.connect({ onSuccess: function() { cb(index, true) }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
         ];
