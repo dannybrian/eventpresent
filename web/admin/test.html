@@ -85,9 +85,9 @@
             <tr><td><p>Test Suite</p></td><td><a onclick="runtests()"><div class="button">GO</div></a><a onclick="resettests()"><div class="button">RESET</div></a></td></tr>
         </table>
     </body>
-    <script type="application/javascript" src="../mqttws31.min.js"></script>
+    <script type="application/javascript" src="/lib/mqttws31.min.js"></script>
     <script>
-        let apass = prompt("Admin password:");
+        // let apass = prompt("Admin password:");
         // nanoid
         let nanoid = (t=21)=>crypto.getRandomValues(new Uint8Array(t)).reduce(((t,e)=>t+=(e&=63)<36?e.toString(36):e<62?(e-26).toString(36).toUpperCase():e>62?"-":"_"),"");
     </script>
@@ -96,10 +96,10 @@
         "use strict;"
         let tests = [
             { n: "Nano ID Create",    f: function(cb, index) { let nid = nanoid(10); cb(index, nid.length === 10, nid) } },
-            { n: "Create WebSocket Client",    f: (cb, index) => { let ws = new WebSocket("ws://localhost:80/admin/ws"); cb(index, ws instanceof WebSocket); } },
-            { n: "Connect WebSocket Client",   f: (cb, index) => { let ws = new WebSocket("ws://localhost:80/admin/ws"); ws.onopen = function() { cb(index, true) }; ws.onerror = function (err) { cb(index, false, "Connection failed: " + err) }; } },
-            { n: "Create MQTT Client",         f: (cb, index) => { let mqtt = new Paho.MQTT.Client(location.hostname, Number(location.port), "clientId"); cb(index, mqtt instanceof Paho.MQTT.Client ) } },
-            { n: "Connect MQTT Client",        f: (cb, index) => { let mqtt = new Paho.MQTT.Client(location.hostname, Number(location.port), "clientId"); mqtt.connect({ onSuccess: function() { cb(index, true) }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
+            { n: "Create WebSocket Client",    f: (cb, index) => { let ws = new WebSocket("ws://localhost:8080/ws"); cb(index, ws instanceof WebSocket); } },
+            { n: "Connect WebSocket Client",   f: (cb, index) => { let ws = new WebSocket("ws://localhost:8080/ws"); ws.onopen = function() { cb(index, true) }; ws.onerror = function (err) { cb(index, false, "Connection failed: " + err) }; } },
+            { n: "Create MQTT Client",         f: (cb, index) => { let mqtt = new Paho.MQTT.Client(location.hostname, 8090, "clientId"); cb(index, mqtt instanceof Paho.MQTT.Client ) } },
+            { n: "Connect MQTT Client",        f: (cb, index) => { let mqtt = new Paho.MQTT.Client(location.hostname, 8090, "clientId"); mqtt.connect({ onSuccess: function() { cb(index, true) }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
         ];
 
         let template = document.getElementsByTagName("template")[0];

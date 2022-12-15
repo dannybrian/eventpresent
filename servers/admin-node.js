@@ -12,7 +12,7 @@
 import { WebSocketServer } from "ws";
 import { connect } from "mqtt";
 
-const wss = new WebSocketServer({ port: 80 });
+const wss = new WebSocketServer({ port: 8091 });
 const mqtt = connect('mqtt://localhost');
 
 wss.on('connection', function connection(ws) {
