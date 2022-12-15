@@ -1,9 +1,8 @@
 # eventPresent
 
-A simple audience polling solution intended for custom-developed overlays to full-screen
-presentations. Think mild interactivity in the middle of an otherwise traditional stage 
-engagement. This is an evolution of something I've been doing in my own presentations for
-a long time, but more flexible and stable.
+A simple (?) audience interactivity solution intended for custom-developed overlays to full-screen
+presentations. This is an evolution of something I've been doing in my own presentations for
+a long time, but more flexible and stable than what I'd build previously.
 
 The components:
 
