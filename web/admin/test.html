@@ -107,14 +107,19 @@
         let tests = [
             // basics
             { n: "Nano ID Create",    f: function(cb, index) { const nid = nanoid(10); cb(index, nid.length === 10, nid) } },
+            
             { n: "Create WebSocket Client",    f: (cb, index) => { const ws = new WebSocket("ws://localhost:8080/ws"); cb(index, ws instanceof WebSocket); } },
+            
             { n: "Connect WebSocket Client",   f: (cb, index) => { const ws = new WebSocket("ws://localhost:8080/ws"); ws.onopen = function() { cb(index, true) }; ws.onerror = function (err) { cb(index, false, "Connection failed: " + err) }; } },
+            
             { n: "Create MQTT Client",         f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid); cb(index, mqtt instanceof Paho.MQTT.Client ) } },
+            
             // Paho (or something) throws a console error on disconnect, so lame.
-            { n: "Connect MQTT Client",        f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, "clientId"); mqtt.connect({ onSuccess: async function() { cb(index, mqtt.isConnected()); }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
-            // test roundtrip ping; we use this via a client timer (not here) to keepalive,
-            // otherwise our nginx/mosquitto websockets will time out.
-            { n: "MQTT roundtrip ping",        f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid); mqtt.connect({ onSuccess: async function() { mqtt.subscribe('user/out'); mqtt.onMessageArrived = function(msg) { cb(index, JSON.parse(msg.payloadString).nid === unid ) }; mqtt.send('user/in', `{"t": "ping", "nid": "${unid}" }`); }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
+            { n: "Connect MQTT Client",        f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid); mqtt.connect({ onSuccess: async function() { cb(index, mqtt.isConnected()); }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
+
+            { n: "MQTT roundtrip ping",        f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid); mqtt.connect({ onSuccess: async function() { mqtt.subscribe('user/out/' + unid); mqtt.onMessageArrived = function(msg) { console.log(msg); cb(index, JSON.parse(msg.payloadString).nid === unid ) }; mqtt.send('user/in', `{"t": "ping", "nid": "${unid}" }`); }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
+            
+            // test retained state message
             
             // load test ping
             

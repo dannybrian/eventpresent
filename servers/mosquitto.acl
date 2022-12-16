@@ -6,6 +6,7 @@
 # This affects access control for clients with no username.
 
 topic read $SYS/#
+pattern read user/out/%c
 
 ## TESTING, FIXME
 # topic readwrite admin/in
@@ -25,7 +26,7 @@ topic read state
 # user publicnode
 topic write user/in
 # user/out is user-specific messages, filtered by our public Node
-topic read user/out
+topic read user/state
 topic read big
 
 user adminapp
@@ -36,8 +37,9 @@ topic read admin/out
 user adminred
 topic readwrite admin/in
 topic read user/in
-topic readwrite admin/out
-topic readwrite user/out
+topic readwrite admin/state
+topic readwrite user/state
+topic readwrite user/out/+
 topic readwrite big
 
 # bigscreen app reads from big

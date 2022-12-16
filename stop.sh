@@ -4,6 +4,6 @@
 nginx -s stop
 killall node
 killall node-red
-
+killall mosquitto
 
 
