@@ -6,6 +6,7 @@
         <style>
             :root {
                 --main-text-color: #0b0b0b;
+                --border-color: #5f5f5f;
             }
             * {
                 font-family: 'Source Sans Pro', sans-serif;
@@ -31,19 +32,27 @@
             td {
                 min-width: 150px;
                 height: 40px;
-                padding: 8px;
+                padding: 4px;
+                margin: 4px;
+            }
+            tr {
+                margin: 4px;
             }
             tr td div.result {
                 display: none;
             }
             tr.success td div.result {
-                display: inline;
+                display: inherit;
             }
             tr.failure td div.result {
-                display: inline;
+                display: inherit;
             }
             tr.success td:last-of-type {
                 background-color: #a3d1a5;
+                border-style: dashed;
+                border-width: 1px;
+                border-color: var(--border-color);
+                border-radius: 5px;
             }
             tr.success td:last-of-type div.button {
                 display: none;
@@ -62,7 +71,7 @@
                 margin-right: 10px;
                 border-style: dashed;
                 border-width: 1px;
-                border-color: #5f5f5f;
+                border-color: var(--border-color);
                 border-radius: 5px;
                 background-color: antiquewhite;
                 padding: 6px 10px;
@@ -89,17 +98,28 @@
     <script>
         // let apass = prompt("Admin password:");
         // nanoid
-        let nanoid = (t=21)=>crypto.getRandomValues(new Uint8Array(t)).reduce(((t,e)=>t+=(e&=63)<36?e.toString(36):e<62?(e-26).toString(36).toUpperCase():e>62?"-":"_"),"");
+        const nanoid = (t=21)=>crypto.getRandomValues(new Uint8Array(t)).reduce(((t,e)=>t+=(e&=63)<36?e.toString(36):e<62?(e-26).toString(36).toUpperCase():e>62?"-":"_"),"");
+        const unid = nanoid(10);
     </script>
     
     <script type="application/javascript">
         "use strict;"
         let tests = [
-            { n: "Nano ID Create",    f: function(cb, index) { let nid = nanoid(10); cb(index, nid.length === 10, nid) } },
-            { n: "Create WebSocket Client",    f: (cb, index) => { let ws = new WebSocket("ws://localhost:8080/ws"); cb(index, ws instanceof WebSocket); } },
-            { n: "Connect WebSocket Client",   f: (cb, index) => { let ws = new WebSocket("ws://localhost:8080/ws"); ws.onopen = function() { cb(index, true) }; ws.onerror = function (err) { cb(index, false, "Connection failed: " + err) }; } },
-            { n: "Create MQTT Client",         f: (cb, index) => { let mqtt = new Paho.MQTT.Client(location.hostname, 8090, "clientId"); cb(index, mqtt instanceof Paho.MQTT.Client ) } },
-            { n: "Connect MQTT Client",        f: (cb, index) => { let mqtt = new Paho.MQTT.Client(location.hostname, 8090, "clientId"); mqtt.connect({ onSuccess: function() { cb(index, true) }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
+            // basics
+            { n: "Nano ID Create",    f: function(cb, index) { const nid = nanoid(10); cb(index, nid.length === 10, nid) } },
+            { n: "Create WebSocket Client",    f: (cb, index) => { const ws = new WebSocket("ws://localhost:8080/ws"); cb(index, ws instanceof WebSocket); } },
+            { n: "Connect WebSocket Client",   f: (cb, index) => { const ws = new WebSocket("ws://localhost:8080/ws"); ws.onopen = function() { cb(index, true) }; ws.onerror = function (err) { cb(index, false, "Connection failed: " + err) }; } },
+            { n: "Create MQTT Client",         f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid); cb(index, mqtt instanceof Paho.MQTT.Client ) } },
+            // Paho (or something) throws a console error on disconnect, so lame.
+            { n: "Connect MQTT Client",        f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, "clientId"); mqtt.connect({ onSuccess: async function() { cb(index, mqtt.isConnected()); }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
+            // test roundtrip ping; we use this via a client timer (not here) to keepalive,
+            // otherwise our nginx/mosquitto websockets will time out.
+            { n: "MQTT roundtrip ping",        f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid); mqtt.connect({ onSuccess: async function() { mqtt.subscribe('user/out'); mqtt.onMessageArrived = function(msg) { cb(index, JSON.parse(msg.payloadString).nid === unid ) }; mqtt.send('user/in', `{"t": "ping", "nid": "${unid}" }`); }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
+            
+            // load test ping
+            
+            // test MQTT message retain
+            
         ];
 
         let template = document.getElementsByTagName("template")[0];
@@ -122,7 +142,7 @@
             });
         }
         
-        function runtests(testnum) {
+        async function runtests(testnum) {
             let cb = function(index, success, message) {
                 message = (typeof message === 'undefined') ? "" : message;
                 toggletest(index, success, message);
@@ -132,9 +152,10 @@
             }
             else // run them all
             {
-                tests.forEach((test, index) => {
-                    test.f(cb, index);
-                });
+                for (let i = 0; i < tests.length; i++) {
+                    tests[i].f(cb, i);
+                    await sleep(500);
+                };
             }
         }
         
@@ -150,10 +171,15 @@
                 tr.querySelectorAll("td")[1].querySelector("div.result").textContent = success;
             }
             else {
+                console.log(message);
                 tr.classList.remove('success');
                 tr.classList.add('failure');
                 tr.querySelectorAll("td")[1].querySelector("div.result").textContent = message;
             }
+        }
+        
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
         
     </script>
