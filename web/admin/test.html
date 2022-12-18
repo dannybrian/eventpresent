@@ -117,7 +117,7 @@
             // Paho (or something) throws a console error on disconnect, so lame.
             { n: "Connect MQTT Client",        f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid); mqtt.connect({ onSuccess: async function() { cb(index, mqtt.isConnected()); }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
 
-            { n: "MQTT roundtrip ping",        f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid); mqtt.connect({ onSuccess: async function() { mqtt.subscribe('user/out/' + unid); mqtt.onMessageArrived = function(msg) { console.log(msg); cb(index, JSON.parse(msg.payloadString).nid === unid ) }; mqtt.send('user/in', `{"t": "ping", "nid": "${unid}" }`); }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
+            { n: "MQTT roundtrip ping",        f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid); mqtt.connect({ onSuccess: async function() { mqtt.subscribe('user/out/' + unid); mqtt.onMessageArrived = function(msg) { cb(index, JSON.parse(msg.payloadString).nid === unid ) }; mqtt.send('user/in', `{"t": "ping", "nid": "${unid}" }`); }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
             
             // test retained state message
             

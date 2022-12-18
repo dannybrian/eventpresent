@@ -2,6 +2,7 @@
   "type": "module",
   "dependencies": {
     "mqtt": "^4.3.7",
+    "node-red": "^3.0.2",
     "ws": "^8.11.0"
   }
 }
