@@ -1,0 +1,566 @@
+[
+    {
+        "id": "bd6df3c71e332263",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ec316c01587be078",
+        "type": "mqtt-broker",
+        "name": "astate",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "c4d27f25125d717b",
+        "type": "comment",
+        "z": "bd6df3c71e332263",
+        "name": "Never give up, never surrender!",
+        "info": "Don't give up!\n",
+        "x": 150,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "0226d23d91edebda",
+        "type": "change",
+        "z": "bd6df3c71e332263",
+        "name": "panic!",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload._message",
+                "pt": "msg",
+                "to": "PANIC!",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1170,
+        "y": 300,
+        "wires": [
+            [
+                "8366898fdb3d9e1b"
+            ]
+        ]
+    },
+    {
+        "id": "abf0c47429c61d66",
+        "type": "debug",
+        "z": "bd6df3c71e332263",
+        "name": "log message",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1910,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "999a2b2d98da460e",
+        "type": "switch",
+        "z": "bd6df3c71e332263",
+        "name": "mag >= 7",
+        "property": "payload.mag",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gte",
+                "v": "7",
+                "vt": "str"
+            },
+            {
+                "t": "lt",
+                "v": "7",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 984.444450378418,
+        "y": 287.77778816223145,
+        "wires": [
+            [
+                "0226d23d91edebda",
+                "10ec158b1fd7105f"
+            ],
+            [
+                "c34ec4fe7561228e"
+            ]
+        ]
+    },
+    {
+        "id": "c34ec4fe7561228e",
+        "type": "change",
+        "z": "bd6df3c71e332263",
+        "name": "no biggie",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload._message",
+                "pt": "msg",
+                "to": "no biggie",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1180,
+        "y": 380,
+        "wires": [
+            [
+                "8366898fdb3d9e1b"
+            ]
+        ]
+    },
+    {
+        "id": "9794b1e20b8221d1",
+        "type": "inject",
+        "z": "bd6df3c71e332263",
+        "name": "start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "b9ee39669fc0c5e8",
+                "085559a11b411047"
+            ]
+        ]
+    },
+    {
+        "id": "7b0c680dbf04a77e",
+        "type": "http request",
+        "z": "bd6df3c71e332263",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.csv",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 650,
+        "y": 200,
+        "wires": [
+            [
+                "4b8f984b1f7de9a5"
+            ]
+        ]
+    },
+    {
+        "id": "4b8f984b1f7de9a5",
+        "type": "csv",
+        "z": "bd6df3c71e332263",
+        "name": "",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 830,
+        "y": 220,
+        "wires": [
+            [
+                "999a2b2d98da460e"
+            ]
+        ]
+    },
+    {
+        "id": "b9ee39669fc0c5e8",
+        "type": "delay",
+        "z": "bd6df3c71e332263",
+        "name": "0.05 second rate limit",
+        "pauseType": "rate",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "0.05",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 420,
+        "y": 200,
+        "wires": [
+            [
+                "7b0c680dbf04a77e"
+            ]
+        ]
+    },
+    {
+        "id": "d5afc32ec0536288",
+        "type": "change",
+        "z": "bd6df3c71e332263",
+        "name": "store highest number",
+        "rules": [
+            {
+                "t": "set",
+                "p": "highest",
+                "pt": "flow",
+                "to": "payload.mag",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1380,
+        "y": 160,
+        "wires": [
+            [
+                "870a9edc55959d5a"
+            ]
+        ]
+    },
+    {
+        "id": "10ec158b1fd7105f",
+        "type": "switch",
+        "z": "bd6df3c71e332263",
+        "name": "if highest yet",
+        "property": "payload.mag",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gte",
+                "v": "highest",
+                "vt": "flow"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1170,
+        "y": 220,
+        "wires": [
+            [
+                "d5afc32ec0536288"
+            ]
+        ]
+    },
+    {
+        "id": "870a9edc55959d5a",
+        "type": "change",
+        "z": "bd6df3c71e332263",
+        "name": "set message",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload._message",
+                "pt": "msg",
+                "to": "HIGHEST YET!",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1590,
+        "y": 240,
+        "wires": [
+            [
+                "8366898fdb3d9e1b"
+            ]
+        ]
+    },
+    {
+        "id": "085559a11b411047",
+        "type": "switch",
+        "z": "bd6df3c71e332263",
+        "name": "initialize flow.highest",
+        "property": "highest",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "null"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 420,
+        "y": 320,
+        "wires": [
+            [
+                "ee2d03bda74e5d68"
+            ]
+        ]
+    },
+    {
+        "id": "ee2d03bda74e5d68",
+        "type": "change",
+        "z": "bd6df3c71e332263",
+        "name": "set highest",
+        "rules": [
+            {
+                "t": "set",
+                "p": "highest",
+                "pt": "flow",
+                "to": "0",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 650,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8366898fdb3d9e1b",
+        "type": "friendly-id",
+        "z": "bd6df3c71e332263",
+        "name": "nanoid",
+        "mode": "GENERATE-NANOID",
+        "charlen": "10",
+        "charset": "DEFAULT",
+        "customs": "",
+        "tostatus": false,
+        "statusVal": "",
+        "statusType": "auto",
+        "inputFromVal": "",
+        "inputFromType": "auto",
+        "outputToVal": "payload.nid",
+        "outputToType": "msg",
+        "x": 1710,
+        "y": 360,
+        "wires": [
+            [
+                "abf0c47429c61d66",
+                "38af79f664b28744"
+            ]
+        ]
+    },
+    {
+        "id": "38af79f664b28744",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "admin/out",
+        "topic": "admin/out",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 1910,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "f49df936df677544",
+        "type": "mqtt in",
+        "z": "bd6df3c71e332263",
+        "name": "",
+        "topic": "admin/out",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ec316c01587be078",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 1520,
+        "y": 560,
+        "wires": [
+            [
+                "02de8e1d9ec75150"
+            ]
+        ]
+    },
+    {
+        "id": "02de8e1d9ec75150",
+        "type": "debug",
+        "z": "bd6df3c71e332263",
+        "name": "Mosquitto msg",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1720,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "0aa9867bc547af02",
+        "type": "mqtt in",
+        "z": "bd6df3c71e332263",
+        "name": "user/in",
+        "topic": "user/in",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "ec316c01587be078",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 1310,
+        "y": 640,
+        "wires": [
+            [
+                "7849f26a2d5e573f"
+            ]
+        ]
+    },
+    {
+        "id": "c1be02d6f16e38a9",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "user/out",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 1824,
+        "y": 658,
+        "wires": []
+    },
+    {
+        "id": "518f69bb3b545182",
+        "type": "debug",
+        "z": "bd6df3c71e332263",
+        "name": "user in/out",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1834,
+        "y": 738,
+        "wires": []
+    },
+    {
+        "id": "de215e1fc43ebdef",
+        "type": "function",
+        "z": "bd6df3c71e332263",
+        "name": "set topic",
+        "func": "msg.topic = \"user/out/\" + msg.payload.nid;\nif (msg.payload.ret === true) {\n    // we only allow a user client to request this for testing\n    msg.retain = true;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1660,
+        "y": 680,
+        "wires": [
+            [
+                "518f69bb3b545182",
+                "c1be02d6f16e38a9"
+            ]
+        ]
+    },
+    {
+        "id": "7849f26a2d5e573f",
+        "type": "switch",
+        "z": "bd6df3c71e332263",
+        "name": "message type",
+        "property": "payload.t",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "ping",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1480,
+        "y": 680,
+        "wires": [
+            [
+                "de215e1fc43ebdef"
+            ]
+        ]
+    }
+]

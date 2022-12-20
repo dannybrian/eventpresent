@@ -43,16 +43,16 @@
             }
             tr.success td div.result {
                 display: inherit;
+                font-family: 'Source Code Pro', sans-serif;
+                margin: 0px 10px 0px 10px;
             }
             tr.failure td div.result {
                 display: inherit;
+                font-family: 'Source Code Pro', sans-serif;
+                margin: 0px 10px 0px 10px;
             }
             tr.success td:last-of-type {
                 background-color: #a3d1a5;
-                border-style: dashed;
-                border-width: 1px;
-                border-color: var(--border-color);
-                border-radius: 5px;
             }
             tr.success td:last-of-type div.button {
                 display: none;
@@ -110,7 +110,7 @@
             
             { n: "Create WebSocket Client",    f: (cb, index) => { const ws = new WebSocket("ws://localhost:8080/ws"); cb(index, ws instanceof WebSocket); } },
             
-            { n: "Connect WebSocket Client",   f: (cb, index) => { const ws = new WebSocket("ws://localhost:8080/ws"); ws.onopen = function() { cb(index, true) }; ws.onerror = function (err) { cb(index, false, "Connection failed: " + err) }; } },
+            { n: "Connect WebSocket Client (disconnect expected)",   f: (cb, index) => { const ws = new WebSocket("ws://localhost:8080/ws"); ws.onopen = function() { cb(index, true) }; ws.onerror = function (err) { cb(index, false, "Connection failed "); console.log(err) }; } },
             
             { n: "Create MQTT Client",         f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid); cb(index, mqtt instanceof Paho.MQTT.Client ) } },
             
@@ -119,7 +119,18 @@
 
             { n: "MQTT roundtrip ping",        f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid); mqtt.connect({ onSuccess: async function() { mqtt.subscribe('user/out/' + unid); mqtt.onMessageArrived = function(msg) { cb(index, JSON.parse(msg.payloadString).nid === unid ) }; mqtt.send('user/in', `{"t": "ping", "nid": "${unid}" }`); }, onFailure: function(err) { cb(index, false, err.errorMessage)} }) }},
             
-            // test retained state message
+            // test retained state message; not doing much error handling here
+            { n: "MQTT ping retained",        f: (cb, index) => { const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid); mqtt.connect({ onSuccess: async function() {
+                mqtt.send('user/in', `{"t": "ping", "ret": true, "nid": "${unid}" }`); mqtt.disconnect();
+                await sleep(500);
+                const mqtt2 = new Paho.MQTT.Client(location.hostname, 8090, unid);
+                mqtt2.connect({ onSuccess: async function() {
+                    mqtt2.subscribe('user/out/' + unid);
+                    mqtt2.onMessageArrived = function(msg2) {
+                        cb(index, JSON.parse(msg2.payloadString).nid === unid )
+                    };
+                }})
+            }})}},
             
             // load test ping
             
