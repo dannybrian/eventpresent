@@ -2,7 +2,7 @@
 
 A simple (?) audience interactivity solution intended for custom-developed overlays to full-screen
 presentations. This is an evolution of something I've been doing in my own presentations for
-a long time, but more flexible and stable than what I'd build previously.
+a long time, but more flexible and stable than what I'd built previously.
 
 The components:
 
