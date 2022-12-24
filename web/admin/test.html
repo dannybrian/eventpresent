@@ -119,7 +119,7 @@
             { n: "Connect WebSocket Client", f: (cb, index) => {
                 ws = new WebSocket("ws://localhost:8080/ws");
                 ws.onerror = function (err) {
-                    cb(index, false, "Connection failed ");
+                    cb(index, false, "connection failed");
                     console.log(err);
                 }
                 ws.onopen = function() {
@@ -182,6 +182,9 @@
             }},
             
             // load test ping
+            
+            // test admin connection
+            
             
             
         ];

@@ -41,6 +41,7 @@ topic readwrite admin/state
 topic readwrite user/state
 topic readwrite user/out/+
 topic readwrite big
+topic read $SYS/broker/clients/connected
 
 # bigscreen app reads from big
 user big
