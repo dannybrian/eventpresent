@@ -1,0 +1,338 @@
+[
+    {
+        "id": "bd6df3c71e332263",
+        "type": "tab",
+        "label": "eventPresent Flows",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ec316c01587be078",
+        "type": "mqtt-broker",
+        "name": "mqtt adminred",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f49df936df677544",
+        "type": "mqtt in",
+        "z": "bd6df3c71e332263",
+        "name": "",
+        "topic": "admin/in",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "ec316c01587be078",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 220,
+        "y": 320,
+        "wires": [
+            [
+                "02de8e1d9ec75150"
+            ]
+        ]
+    },
+    {
+        "id": "02de8e1d9ec75150",
+        "type": "debug",
+        "z": "bd6df3c71e332263",
+        "name": "Mosquitto msg",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "0aa9867bc547af02",
+        "type": "mqtt in",
+        "z": "bd6df3c71e332263",
+        "name": "user/in",
+        "topic": "user/in",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "ec316c01587be078",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 520,
+        "wires": [
+            [
+                "7849f26a2d5e573f"
+            ]
+        ]
+    },
+    {
+        "id": "c1be02d6f16e38a9",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "user/out",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 900,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "518f69bb3b545182",
+        "type": "debug",
+        "z": "bd6df3c71e332263",
+        "name": "user in/out",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "de215e1fc43ebdef",
+        "type": "function",
+        "z": "bd6df3c71e332263",
+        "name": "set topic (user-specific)",
+        "func": "msg.topic = \"user/out/\" + msg.payload.nid;\nif (msg.payload.ret === true) {\n    // we only allow a user client to request this for testing\n    msg.retain = true;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 626,
+        "y": 502,
+        "wires": [
+            [
+                "518f69bb3b545182",
+                "c1be02d6f16e38a9"
+            ]
+        ]
+    },
+    {
+        "id": "7849f26a2d5e573f",
+        "type": "switch",
+        "z": "bd6df3c71e332263",
+        "name": "message type",
+        "property": "payload.t",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "ping",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "vote",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 380,
+        "y": 520,
+        "wires": [
+            [
+                "de215e1fc43ebdef"
+            ],
+            [
+                "8d794af0862c2ffc"
+            ]
+        ]
+    },
+    {
+        "id": "ea0d103bcb6d78a7",
+        "type": "mqtt in",
+        "z": "bd6df3c71e332263",
+        "name": "connected clients",
+        "topic": "$SYS/broker/clients/connected",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "ec316c01587be078",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 250,
+        "y": 80,
+        "wires": [
+            [
+                "abeba751e32b09eb"
+            ]
+        ]
+    },
+    {
+        "id": "f0024ac8ab0aca2e",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "admin/state",
+        "topic": "admin/state",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 490,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "6d814a14c5046535",
+        "type": "inject",
+        "z": "bd6df3c71e332263",
+        "name": "admin state 1s",
+        "props": [
+            {
+                "p": "payload.ts",
+                "v": "",
+                "vt": "date"
+            },
+            {
+                "p": "payload.clients",
+                "v": "connections",
+                "vt": "global"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 260,
+        "y": 200,
+        "wires": [
+            [
+                "f0024ac8ab0aca2e"
+            ]
+        ]
+    },
+    {
+        "id": "abeba751e32b09eb",
+        "type": "change",
+        "z": "bd6df3c71e332263",
+        "name": "track connection count",
+        "rules": [
+            {
+                "t": "set",
+                "p": "connections",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5ccad9bb0d443845",
+        "type": "comment",
+        "z": "bd6df3c71e332263",
+        "name": "set global context for connection count",
+        "info": "",
+        "x": 230,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "cddf4953399b2887",
+        "type": "comment",
+        "z": "bd6df3c71e332263",
+        "name": "send an admin state every 1s",
+        "info": "",
+        "x": 200,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "6ba37d79bcb7c4c5",
+        "type": "comment",
+        "z": "bd6df3c71e332263",
+        "name": "handle incoming user messages",
+        "info": "\n",
+        "x": 210,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "d86243bef5fe6f22",
+        "type": "comment",
+        "z": "bd6df3c71e332263",
+        "name": "handle incoming admin messages",
+        "info": "\n",
+        "x": 220,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "8d794af0862c2ffc",
+        "type": "function",
+        "z": "bd6df3c71e332263",
+        "name": "set topic",
+        "func": "msg.topic = \"user/out/\" + msg.payload.nid;\nif (msg.payload.ret === true) {\n    // we only allow a user client to request this for testing\n    msg.retain = true;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    }
+]
