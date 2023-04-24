@@ -22,13 +22,13 @@ The components:
 * Node-RED, which contain all the (minimal) backend logic for messages and message
   routing.
 
-To get things running, you need to install nginx, Mosquitto, NodeJS, and Node-RED. And really, that's all. See the
-`start.sh` script to get rolling.
+To get things running, you need to install nginx, Mosquitto, NodeJS, and Node-RED. Do an `npm install` in the server dir. And really, that's all. See the `start.sh` script to get rolling.
 
-The admin app (http://HOSTNAME/admin) prompts for a password, which needs to match the `adminapp` Mosquitto
-password, which you need to set using `mosquitto_passwd`. From that point, everything is driven via the 
-presentation "script" at `web/admin/script.json`. This can in turn trigger other `adminapp` services such as a Node 
-script which runs as a timer, or simply responding to events. 
+The admin app (http://HOSTNAME/admin) prompts for a password, which needs to match the `adminapp` Mosquitto password, which you need to set using `mosquitto_passwd`. You also need to make sure the passwords match for the `adminred` user — setting it via the Mosquitto pwfile and also in the node-red flows.
+
+From that point, everything is driven via the presentation "script" at `web/admin/script.json`. Use `yarn parcel web/index.html` to serve a build, and `yarn parcel build web/index.html` to built to `./dist`.
+
+
 
 ## Caveats
 
