@@ -33,6 +33,9 @@ user adminapp
 # adminin, auth'd writes from adminapp and adminred
 topic write admin/in
 topic read admin/out
+topic read admin/state
+topic read user/state
+topic read big
 
 user adminred
 topic readwrite admin/in

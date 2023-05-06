@@ -11,26 +11,33 @@
             * {
                 font-family: 'Source Sans Pro', sans-serif;
             }
-            html, body {
+            html {
                 background-color: #f3f3f3;
                 color: var(--main-text-color);
+                font-size: 18px;
             }
+            /*@media only screen and (min-width:801px)  {
+                html {
+                    zoom: 1.1;
+                    font-size: 25px;
+                }
+            }*/
             body {
-                padding: 50px 120px;
+                padding: 50px 100px;
             }
             h1 {
                 font-weight: normal;
-                font-size: 28px;
+                font-size: 140%;
             }
             p {
-                font-size: 20px;
+
             }
             .fixed {
                 font-family: 'Source Code Pro', sans-serif;
                 font-weight: normal;
             }
             td {
-                min-width: 150px;
+                min-width: 170px;
                 height: 40px;
                 padding: 4px;
                 margin: 4px;
@@ -64,7 +71,7 @@
                 background-color: #db9f9f;
             }
             td:nth-child(1) {
-                width: 300px;
+                width: 500px;
             }
             .button {
                 float: left;
@@ -193,8 +200,7 @@
                 }});
             }},
             
-            // test bad JSON, parse error should get caught by server
-            
+            // test bad JSON
             
             // load test ping
             

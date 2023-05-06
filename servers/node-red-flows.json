@@ -54,7 +54,7 @@
         "y": 320,
         "wires": [
             [
-                "02de8e1d9ec75150"
+                "8954b5416bfd12a4"
             ]
         ]
     },
@@ -71,8 +71,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 440,
-        "y": 320,
+        "x": 540,
+        "y": 400,
         "wires": []
     },
     {
@@ -89,10 +89,10 @@
         "rh": 0,
         "inputs": 0,
         "x": 190,
-        "y": 520,
+        "y": 700,
         "wires": [
             [
-                "7849f26a2d5e573f"
+                "8d794af0862c2ffc"
             ]
         ]
     },
@@ -110,8 +110,8 @@
         "correl": "",
         "expiry": "",
         "broker": "ec316c01587be078",
-        "x": 900,
-        "y": 440,
+        "x": 800,
+        "y": 680,
         "wires": []
     },
     {
@@ -119,7 +119,7 @@
         "type": "debug",
         "z": "bd6df3c71e332263",
         "name": "user in/out",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -127,29 +127,9 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 910,
-        "y": 560,
+        "x": 770,
+        "y": 780,
         "wires": []
-    },
-    {
-        "id": "de215e1fc43ebdef",
-        "type": "function",
-        "z": "bd6df3c71e332263",
-        "name": "set topic (user-specific)",
-        "func": "msg.topic = \"user/out/\" + msg.payload.nid;\nif (msg.payload.ret === true) {\n    // we only allow a user client to request this for testing\n    msg.retain = true;\n}\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 626,
-        "y": 502,
-        "wires": [
-            [
-                "518f69bb3b545182",
-                "c1be02d6f16e38a9"
-            ]
-        ]
     },
     {
         "id": "7849f26a2d5e573f",
@@ -173,15 +153,14 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 380,
-        "y": 520,
+        "x": 560,
+        "y": 700,
         "wires": [
             [
-                "de215e1fc43ebdef"
+                "518f69bb3b545182",
+                "c1be02d6f16e38a9"
             ],
-            [
-                "8d794af0862c2ffc"
-            ]
+            []
         ]
     },
     {
@@ -212,7 +191,7 @@
         "name": "admin/state",
         "topic": "admin/state",
         "qos": "",
-        "retain": "true",
+        "retain": "false",
         "respTopic": "",
         "contentType": "",
         "userProps": "",
@@ -305,7 +284,7 @@
         "name": "handle incoming user messages",
         "info": "\n",
         "x": 210,
-        "y": 480,
+        "y": 660,
         "wires": []
     },
     {
@@ -329,10 +308,195 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 580,
-        "y": 600,
+        "x": 360,
+        "y": 700,
         "wires": [
-            []
+            [
+                "7849f26a2d5e573f"
+            ]
         ]
+    },
+    {
+        "id": "5b6495e98af2cb5f",
+        "type": "switch",
+        "z": "bd6df3c71e332263",
+        "name": "message type",
+        "property": "payload.t",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "msg",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "reveal",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "clear",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 540,
+        "y": 320,
+        "wires": [
+            [
+                "1c92a6958cdd3fe8"
+            ],
+            [
+                "cd814831c5ad2673"
+            ],
+            [
+                "dafda022462fc446",
+                "c3148f0baabf752a"
+            ]
+        ]
+    },
+    {
+        "id": "1c92a6958cdd3fe8",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "user/state",
+        "topic": "user/state",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 780,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "8954b5416bfd12a4",
+        "type": "function",
+        "z": "bd6df3c71e332263",
+        "name": "retain?",
+        "func": "if (msg.payload.ret === true) {\n    msg.retain = true;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 320,
+        "wires": [
+            [
+                "5b6495e98af2cb5f",
+                "02de8e1d9ec75150"
+            ]
+        ]
+    },
+    {
+        "id": "4cc5e50ae4f2113e",
+        "type": "comment",
+        "z": "bd6df3c71e332263",
+        "name": "FIXME",
+        "info": "Don't allow retained user messages. But how to test?\n",
+        "x": 350,
+        "y": 740,
+        "wires": [],
+        "icon": "node-red/alert.svg"
+    },
+    {
+        "id": "cd814831c5ad2673",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "big",
+        "topic": "big",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 790,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "d855b78211301be9",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "clear user/state",
+        "topic": "user/state",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 1000,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "3fc546afde2b3eab",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "big",
+        "topic": "big",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 970,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "dafda022462fc446",
+        "type": "function",
+        "z": "bd6df3c71e332263",
+        "name": "null payload",
+        "func": "msg.payload = {};\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 480,
+        "wires": [
+            [
+                "3fc546afde2b3eab",
+                "d855b78211301be9"
+            ]
+        ]
+    },
+    {
+        "id": "c3148f0baabf752a",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "admin/state",
+        "topic": "admin/state",
+        "qos": "",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 790,
+        "y": 560,
+        "wires": []
     }
 ]

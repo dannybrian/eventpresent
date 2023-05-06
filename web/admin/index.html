@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:500,700' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+        <style>
+            :root {
+                --main-text-color: #0b0b0b;
+                --border-color: #5f5f5f;
+            }
+            * {
+                font-family: 'Source Sans Pro', sans-serif;
+            }
+            html {
+                background-color: #f3f3f3;
+                color: var(--main-text-color);
+                font-size: 18px;
+            }
+            /*@media only screen and (min-width:801px)  {
+                html {
+                    zoom: 1.1;
+                    font-size: 25px;
+                }
+            }*/
+            body {
+                padding: 50px;
+            }
+            h1 {
+                font-weight: normal;
+                font-size: 140%;
+            }
+            .column {
+                float: left;
+                width: 20%;
+            }
+            .left {
+                width: 80%;
+            }
+            /* Clear floats after the columns */
+            .row:after {
+                content: "";
+                display: table;
+                clear: both;
+                padding: 5px;
+            }
+            .row {
+                width: 100%;
+                padding: 5px;
+                margin-top: 5px;
+                border-radius: 5px;
+            }
+            .row.highlight {
+                background-color: #b0e081;
+            }
+            p {
+                width: 100%;
+                padding: 2px;
+                margin-left: 10px;
+            }
+            .fixed {
+                font-family: 'Source Code Pro', sans-serif;
+                font-weight: normal;
+            }
+            .button {
+                float: left;
+                margin-right: 10px;
+                margin-top: 10px;
+                border-style: dashed;
+                border-width: 1px;
+                border-color: var(--border-color);
+                border-radius: 5px;
+                background-color: antiquewhite;
+                padding: 6px 10px;
+                font-family: 'Source Code Pro', sans-serif;
+                font-weight: bold;
+                text-decoration: none;
+                cursor: pointer; 
+                transition: background 0.5s;
+
+            }
+            .button:active {
+                background-color:coral;
+                transition: background 0s;
+            }
+            @keyframes highlight {
+                0% {
+                    background: coral;
+                }
+                100% {
+                    background: antiquewhite;
+                }
+            }
+            a:link, a:visited, a:active, a:hover {
+                color: var(--main-text-color);
+                text-decoration: none;
+            }
+        </style>
+        <title>eventPresent admin</title>
+    </head>
+    <body>
+        <h1><span class="fixed">eventPresent admin</span></h1>
+        <template><div class="row"><div class="column left"><p>Hi</p></div><div class="column"><div class="button">GO</div><a><div class="result"></div></a></div></div></template>
+        <p></p>
+    </body>
+    <script type="application/javascript" src="../lib/mqttws31.min.js"></script>
+    
+    <script type="application/javascript">
+        "use strict;"
+        let events = [
+
+            { 
+                id: "e0",
+                n: "Welcome Message, clear retained messages (reload after)",
+                t: "clear",
+                content: "Four quick questions. This won't take long!",
+            },
+            
+            {
+                id: "e1",
+                t: "msg",
+                n: "Build versus Buy! Take a side.",
+                msg: "Build versus Buy! Take a side.",
+                ty: "(We know that was an unfair question. Sorry.)",
+                opts: ["Buy", "Build"],
+                
+            },
+            
+            {
+                id: "e2",
+                t: "msg",
+                n: "Low-Code! Take a side.",
+                msg: "Low-Code? Take a side.",
+                opts: ["Heck No", "Maybe So", "Let's Go!"],
+                ty: "(Again, very unfair. But thank you for your answer.)"
+            },
+            
+            {
+                id: "e3",
+                t: "msg",
+                n: "The job of acchitects.",
+                msg: "The primary job of architects to to protect the enterprise from the future.",
+                opts: ["Agree", "Disagree"],
+                ty: "We hope you agree with us on this one."
+            },
+            
+            {
+                id: "e4",
+                t: "msg",
+                n: "TMNT. Take a side.",
+                msg: "TMNT. Take a side.",
+                opts: ["Dumb", "Really dumb"],
+                ty: "Jason doesn't know I put this question in."
+            },
+            
+            {
+                id: "e10",
+                t: "msg",
+                n: "Thank you",
+                msg: "Thank you for participating in this survey!"
+            },
+            
+            {
+                id: "e20",
+                n: "Reveal Build v Buy",
+                t: "reveal",
+                showid: 1
+            }
+            
+        ];
+
+        const adminpass = "Plymouth45!";
+        /* Copyright 2017 Andrey Sitnik <andrey@sitnik.ru> */
+        const nanoid = (t=21)=>crypto.getRandomValues(new Uint8Array(t)).reduce(((t,e)=>t+=(e&=63)<36?e.toString(36):e<62?(e-26).toString(36).toUpperCase():e>62?"-":"_"),"");
+        let unid = localStorage.getItem('unid');
+        if (unid == null) {
+            unid = nanoid(10);
+            localStorage.setItem('unid', unid);
+            // this won't pretent resets or incognito mode, but don't really care.
+        }
+
+        let template = document.getElementsByTagName("template")[0];
+        let rowtemplate = template.content.querySelector("div");
+        let table = document.querySelector("p");
+
+        const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid);
+        mqtt.connect({ userName: "adminapp", password: adminpass,
+                      onSuccess: function(msg) {
+                            console.log("mqtt connected");
+                            mqtt.onConnectionLost = function(response) {
+                                if (response.errorCode !== 0) {
+                                    console.log("onConnectionLost:"+response.errorMessage);
+                                }
+                            }
+                            mqtt.subscribe('user/state');
+                            mqtt.subscribe('admin/state');
+                            mqtt.subscribe('big');
+                            mqtt.onMessageArrived = function (message) { 
+                                let payload = JSON.parse(message.payloadString);
+                                switch (message.destinationName) {
+                                    case "user/state":
+                                        // highlight the successful round trip
+                                        highlightEvent(payload.id);
+                                        break;
+                                    case "admin/state":
+                                        if (payload.t === "clear") {
+                                            highlightEvent(payload.id);
+                                        }
+                                        // console.log(payload.clients);
+                                        break;
+                                    case "big":
+                                        highlightEvent(payload.id);
+                                        break;
+                                    default:
+                                }
+                            };
+                      },
+                      onFailure: function(msg) { console.log("mqtt connection failed: " + JSON.stringify(msg)) }
+                     });
+        
+        window.onload = function() {
+            // create list of tests
+            events.forEach((test, index) => {
+                let row = document.importNode(rowtemplate, true);
+                row.setAttribute('id', test.id);
+                row.querySelectorAll('div.column p')[0].textContent = test.n;
+                let button = row.querySelectorAll('div div.button')[0];
+                button.onclick = function() {
+                    button.classList.add('active');
+                    setTimeout( function() { button.classList.remove('active') }, 1000);
+                    sendevent(index);
+                }
+                table.appendChild(row);
+            });
+        }
+        
+        function resettests() {
+            events.forEach((test, index) => {
+                toggletest(index, 0, 0, true);
+            });
+        }
+        
+        async function sendevent(eventnum) {
+            let cb = function(index, success, message) {
+                message = (typeof message === 'undefined') ? "" : message;
+                toggletest(index, success, message);
+            }
+            mqtt.send('admin/in', JSON.stringify(events[eventnum]));
+            //events[eventnum].f(cb, eventnum);
+        }
+        
+        function highlightEvent(id) {
+            if (id !== null) {
+                let tr = document.getElementById(id);
+                if (tr !== null) {
+                    tr.classList.add('highlight');
+                }
+            }
+        }
+                
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        
+        
+        /* detectIncognito v1.1.4 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> */
+        "use strict"; var detectIncognito=function(){return new Promise(function(resolve,reject){var browserName="Unknown";function __callback(isPrivate){resolve({isPrivate:isPrivate,browserName:browserName})}function identifyChromium(){var ua=navigator.userAgent;if(ua.match(/Chrome/)){if(navigator.brave!==undefined){return"Brave"}else if(ua.match(/Edg/)){return"Edge"}else if(ua.match(/OPR/)){return"Opera"}return"Chrome"}else{return"Chromium"}}function assertEvalToString(value){return value===eval.toString().length}function isSafari(){var v=navigator.vendor;return v!==undefined&&v.indexOf("Apple")===0&&assertEvalToString(37)}function isChrome(){var v=navigator.vendor;return v!==undefined&&v.indexOf("Google")===0&&assertEvalToString(33)}function isFirefox(){return document.documentElement!==undefined&&document.documentElement.style.MozAppearance!==undefined&&assertEvalToString(37)}function isMSIE(){return navigator.msSaveBlob!==undefined&&assertEvalToString(39)}function newSafariTest(){var tmp_name=String(Math.random());try{var db=window.indexedDB.open(tmp_name,1);db.onupgradeneeded=function(i){var _a,_b;var res=(_a=i.target)===null||_a===void 0?void 0:_a.result;try{res.createObjectStore("test",{autoIncrement:true}).put(new Blob);__callback(false)}catch(e){var message=e;if(e instanceof Error){message=(_b=e.message)!==null&&_b!==void 0?_b:e}if(typeof message!=="string"){return __callback(false)}var matchesExpectedError=/BlobURLs are not yet supported/.test(message);return __callback(matchesExpectedError)}finally{res.close();window.indexedDB.deleteDatabase(tmp_name)}}}catch(e){return __callback(false)}}function oldSafariTest(){var openDB=window.openDatabase;var storage=window.localStorage;try{openDB(null,null,null,null)}catch(e){return __callback(true)}try{storage.setItem("test","1");storage.removeItem("test")}catch(e){return __callback(true)}return __callback(false)}function safariPrivateTest(){if(navigator.maxTouchPoints!==undefined){newSafariTest()}else{oldSafariTest()}}function getQuotaLimit(){var w=window;if(w.performance!==undefined&&w.performance.memory!==undefined&&w.performance.memory.jsHeapSizeLimit!==undefined){return performance.memory.jsHeapSizeLimit}return 1073741824}function storageQuotaChromePrivateTest(){navigator.webkitTemporaryStorage.queryUsageAndQuota(function(usage,quota){__callback(quota<getQuotaLimit())},function(e){reject(new Error("detectIncognito somehow failed to query storage quota: "+e.message))})}function oldChromePrivateTest(){var fs=window.webkitRequestFileSystem;var success=function(){__callback(false)};var error=function(){__callback(true)};fs(0,1,success,error)}function chromePrivateTest(){if(self.Promise!==undefined&&self.Promise.allSettled!==undefined){storageQuotaChromePrivateTest()}else{oldChromePrivateTest()}}function firefoxPrivateTest(){__callback(navigator.serviceWorker===undefined)}function msiePrivateTest(){__callback(window.indexedDB===undefined)}function main(){if(isSafari()){browserName="Safari";safariPrivateTest()}else if(isChrome()){browserName=identifyChromium();chromePrivateTest()}else if(isFirefox()){browserName="Firefox";firefoxPrivateTest()}else if(isMSIE()){browserName="Internet Explorer";msiePrivateTest()}else{reject(new Error("detectIncognito cannot determine the browser"))}}main()})};
+        
+    </script>
+    
+</html>
