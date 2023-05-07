@@ -17,7 +17,7 @@
                 color: var(--main-text-color);
                 font-size: 18px;
             }
-	    body {
+	        body {
                 padding: 5%;
             } 
             h1 {
@@ -195,6 +195,15 @@
                 }});
             }},
             
+            // test a vote
+            // test a vote
+             { n: "Vote", f: (cb, index) => {
+                 const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid);
+                 mqtt.connect({ onSuccess: async function() {
+                     mqtt.send('user/in', `{"t": "vote", "qid": "a2", "vote": "true!", "nid": "${unid}" }`);
+                     await sleep(500);
+                }});
+            }},
             // test bad JSON
             
             // load test ping

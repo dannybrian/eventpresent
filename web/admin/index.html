@@ -163,7 +163,7 @@
                 id: "e20",
                 n: "Reveal Build v Buy",
                 t: "reveal",
-                showid: 1
+                showid: "e1"
             }
             
         ];
@@ -208,7 +208,10 @@
                                         // console.log(payload.clients);
                                         break;
                                     case "big":
-                                        highlightEvent(payload.id);
+                                        if (payload.t === "reveal") {
+                                            highlightEvent(payload.id);
+                                        }
+                                        // console.log(payload.clients);
                                         break;
                                     default:
                                 }
