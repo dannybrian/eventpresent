@@ -506,7 +506,7 @@
         "type": "function",
         "z": "bd6df3c71e332263",
         "name": "store votes",
-        "func": "// initialize once; could do elsewhere.\nlet votes = global.get('votes');\nif(votes == null) {\n    votes = new Object;\n    global.set('votes', votes);\n}\n\nif (msg.payload.qid != null && msg.payload.nid != null && msg.payload.optionid != null) {\n    if (votes[msg.payload.qid] == null) {\n        votes[msg.payload.qid] = new Object;\n    }\n    votes[msg.payload.qid][msg.payload.nid] = msg.payload.optionid;\n}\n\nreturn msg;",
+        "func": "if (msg.payload.qid != null && msg.payload.nid != null && msg.payload.optionid != null) {\n    // initialize once; could do elsewhere.\n    let votes = global.get('votes');\n\n    if (votes[msg.payload.qid] == null) {\n        votes[msg.payload.qid] = new Object;\n    }\n    votes[msg.payload.qid][msg.payload.nid] = msg.payload.optionid;\n\n    let votesCount = global.get('votesCount');\n    if (votesCount[msg.payload.qid] == null) {\n        votesCount[msg.payload.qid] = 0;\n    }\n    votesCount[msg.payload.qid]++;\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -517,5 +517,61 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "956eb54c1e3d1def",
+        "type": "inject",
+        "z": "bd6df3c71e332263",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 560,
+        "wires": [
+            [
+                "86c63f8226e299bc"
+            ]
+        ]
+    },
+    {
+        "id": "86c63f8226e299bc",
+        "type": "function",
+        "z": "bd6df3c71e332263",
+        "name": "initialize contexts",
+        "func": "// initialize once; could do elsewhere.\nlet votes = global.get('votes');\nif (votes == null) {\n    votes = new Object;\n    global.set('votes', votes);\n}\n\nlet votesCount = global.get('votesCount');\nif (votesCount == null) {\n    votesCount = new Object;\n    global.set('votesCount', votesCount);\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e8f04135378599a9",
+        "type": "comment",
+        "z": "bd6df3c71e332263",
+        "name": "initialize contexts",
+        "info": "\n",
+        "x": 160,
+        "y": 520,
+        "wires": []
     }
 ]

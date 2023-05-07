@@ -49,12 +49,12 @@
                 left: 10%;
                 margin-right: 10%;
                 font-size: 7vw;
-                transition: opacity 0.4s, transform 1s;
-                transform: translate(0%, -20%);
+                transition: all 0.5s ease-out;
+                font-style: italic;
             }
             #ty.hidden {
-                
-                transition: opacity 0.4s, transform 1s;
+                transition: all 0.5s ease-out;
+                transform: translate(0%, 15%);
             }
             .column {
                 float: left;
@@ -127,7 +127,8 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                pointer-events: none;
+                pointer-events: pointer;
+                user-select: none;
             }
             .option:active {
                 background-color: var(--highlight-color);
