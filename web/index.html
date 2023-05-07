@@ -19,11 +19,11 @@
                 color: var(--main-text-color);
                 font-size: 18px;
             }
-            @media only screen and (min-width: 768px) {
+            /*@media only screen and (min-width: 768px) {
                 html {
                     zoom: 0.7;
                 }
-            }
+            }*/
             body {
                 padding: 3%;
                 margin: 2%;
@@ -42,6 +42,19 @@
                 margin-bottom: 10%;
                 margin-top: 10%;
                 transition: opacity 0.4s;
+            }
+            #ty {
+                position: absolute;
+                top: 40%;
+                left: 10%;
+                margin-right: 10%;
+                font-size: 7vw;
+                transition: opacity 0.4s, transform 1s;
+                transform: translate(0%, -20%);
+            }
+            #ty.hidden {
+                
+                transition: opacity 0.4s, transform 1s;
             }
             .column {
                 float: left;
@@ -114,6 +127,7 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
+                pointer-events: none;
             }
             .option:active {
                 background-color: var(--highlight-color);
@@ -140,6 +154,10 @@
         <div id="o0" class="option hidden"><div>Here is option number 1.</div></div>
         <div id="o1" class="option hidden"><div>Heck no!</div></div>
         <div id="o2" class="option odd hidden"><div>Here is an odd option number 3.</div></div>
+        
+        <div id="ty" class="hidden">
+            Thank you
+        </div>
         
         <template><div class="row"><div class="column left"><p>Hi</p></div><div class="column"><div class="button">GO</div><a><div class="result"></div></a></div></div></template>
         <p></p>
@@ -173,7 +191,7 @@
                                 let payload = JSON.parse(message.payloadString);
                                 switch (message.destinationName) {
                                     case "user/state":
-                                        console.log(message.payloadString);
+                                        //console.log(message.payloadString);
                                         setPrompt(payload);
                                         // highlight the successful round trip
                                         //highlightEvent(payload.id);
@@ -190,8 +208,13 @@
         }
         
         async function setPrompt(message) {
+            console.log(message);
+            
             let content = document.getElementById('content');
+            let ty = document.getElementById('ty');
             content.classList.add('hidden');
+            ty.classList.add('hidden');
+            
             let buttons = document.querySelectorAll('.option');
             buttons.forEach((button, index) => {
                 // fade out the visible
@@ -210,9 +233,9 @@
                         button.onclick = function() {
                             console.log(button.id);
                             buttons.forEach((ebutton, index) => {
-                                let length = 1000;
-                                console.log(button.id);
-                                console.log(`o${index}`);
+                                let length = 700;
+                                //console.log(button.id);
+                                //console.log(`o${index}`);
                                 if (button.id !== `o${index}`) {
                                     length = 100 + (100 * index);
                                 }
@@ -223,12 +246,18 @@
                             });
                             setTimeout(() => {
                                 content.classList.add('hidden');
+                                if (message.ty != null) {
+                                    setTimeout(() => {  
+                                        ty.textContent = message.ty;
+                                        ty.classList.remove('hidden');
+                                    }, 700);
+                                }
                             }, 300);
 
-                            sendVote(option.id);
+                            sendVote(message.id, option.id);
                         }
                     });
-                    console.log(count);
+                    //console.log(count);
                     
                     message.opts.forEach((option, index) => {
                         let button = document.getElementById(`o${index}`);
@@ -243,15 +272,8 @@
             }, 500);
         }
         
-        async function sendVote(vote) {
-            console.log(vote);
-            return;
-            
-            let cb = function(index, success, message) {
-                message = (typeof message === 'undefined') ? "" : message;
-                toggletest(index, success, message);
-            }
-            mqtt.send('user/in', JSON.stringify(vote));
+        async function sendVote(qid, optionid) {
+            mqtt.send('user/in', `{ "t":"vote", "qid":"${qid}", "nid":"${unid}", "optionid":"${optionid}"}`);
             // mqtt.send('user/in', `{"t": "ping", "nid": "${unid}" }`);
             //events[eventnum].f(cb, eventnum);
         }

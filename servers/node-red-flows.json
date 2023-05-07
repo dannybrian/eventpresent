@@ -506,7 +506,7 @@
         "type": "function",
         "z": "bd6df3c71e332263",
         "name": "store votes",
-        "func": "// initialize once; could do elsewhere.\nlet votes = global.get('votes');\nif(votes == null) {\n    votes = new Object;\n    global.set('votes', votes);\n}\n\nif(msg.payload.qid != null && msg.payload.nid != null) {\n    if (votes[msg.payload.qid] == null) {\n        votes[msg.payload.qid] = new Object;\n    }\n    votes[msg.payload.qid][msg.payload.nid] = msg.payload.vote;\n}\n\nreturn msg;",
+        "func": "// initialize once; could do elsewhere.\nlet votes = global.get('votes');\nif(votes == null) {\n    votes = new Object;\n    global.set('votes', votes);\n}\n\nif (msg.payload.qid != null && msg.payload.nid != null && msg.payload.optionid != null) {\n    if (votes[msg.payload.qid] == null) {\n        votes[msg.payload.qid] = new Object;\n    }\n    votes[msg.payload.qid][msg.payload.nid] = msg.payload.optionid;\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
