@@ -11,7 +11,7 @@
         "id": "ec316c01587be078",
         "type": "mqtt-broker",
         "name": "mqtt adminred",
-        "broker": "g4tp.com",
+        "broker": "localhost",
         "port": "1883",
         "clientid": "",
         "autoConnect": true,
@@ -111,7 +111,7 @@
         "expiry": "",
         "broker": "ec316c01587be078",
         "x": 800,
-        "y": 680,
+        "y": 760,
         "wires": []
     },
     {
@@ -127,8 +127,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 770,
-        "y": 780,
+        "x": 810,
+        "y": 700,
         "wires": []
     },
     {
@@ -160,7 +160,9 @@
                 "518f69bb3b545182",
                 "c1be02d6f16e38a9"
             ],
-            []
+            [
+                "e340886173db8ab2"
+            ]
         ]
     },
     {
@@ -498,5 +500,22 @@
         "x": 790,
         "y": 560,
         "wires": []
+    },
+    {
+        "id": "e340886173db8ab2",
+        "type": "function",
+        "z": "bd6df3c71e332263",
+        "name": "store votes",
+        "func": "// initialize once; could do elsewhere.\nlet votes = global.get('votes');\nif(votes == null) {\n    votes = new Object;\n    global.set('votes', votes);\n}\n\nif(msg.payload.qid != null && msg.payload.nid != null) {\n    if (votes[msg.payload.qid] == null) {\n        votes[msg.payload.qid] = new Object;\n    }\n    votes[msg.payload.qid][msg.payload.nid] = msg.payload.vote;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 820,
+        "wires": [
+            []
+        ]
     }
 ]
