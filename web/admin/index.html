@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <head>
         <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:500,700' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
@@ -16,14 +17,9 @@
                 color: var(--main-text-color);
                 font-size: 18px;
             }
-            /*@media only screen and (min-width:801px)  {
-                html {
-                    zoom: 1.1;
-                    font-size: 25px;
-                }
-            }*/
             body {
-                padding: 50px;
+                padding: 3%;
+                margin: 2%;
             }
             h1 {
                 font-weight: normal;
@@ -31,22 +27,21 @@
             }
             .column {
                 float: left;
-                width: 20%;
+                width: 30%;
             }
             .left {
-                width: 80%;
+                width: 70%;
             }
             /* Clear floats after the columns */
             .row:after {
                 content: "";
                 display: table;
                 clear: both;
-                padding: 5px;
             }
             .row {
-                width: 100%;
-                padding: 5px;
-                margin-top: 5px;
+                width: 90%;
+                padding: 2%;
+                margin: 2%;
                 border-radius: 5px;
             }
             .row.highlight {
@@ -54,8 +49,8 @@
             }
             p {
                 width: 100%;
-                padding: 2px;
-                margin-left: 10px;
+                margin-left: 3%;
+                margin-right: 3%;
             }
             .fixed {
                 font-family: 'Source Code Pro', sans-serif;
@@ -109,10 +104,16 @@
         let events = [
 
             { 
-                id: "e0",
-                n: "Welcome Message, clear retained messages (reload after)",
+                id: "e000",
+                n: "Clear retained messages",
                 t: "clear",
-                content: "Four quick questions. This won't take long!",
+            },
+            
+            {
+                id: "e0",
+                t: "msg",
+                n: "Welcome",
+                msg: "Thank you for joining this quick survey! Four quick questions. This won't take long...",
             },
             
             {
@@ -121,7 +122,7 @@
                 n: "Build versus Buy! Take a side.",
                 msg: "Build versus Buy! Take a side.",
                 ty: "(We know that was an unfair question. Sorry.)",
-                opts: ["Buy", "Build"],
+                opts: [{id:"buy",text:"Buy"}, {id:"build",text:"Build"}],
                 
             },
             
@@ -130,7 +131,7 @@
                 t: "msg",
                 n: "Low-Code! Take a side.",
                 msg: "Low-Code? Take a side.",
-                opts: ["Heck No", "Maybe So", "Let's Go!"],
+                opts: [{id:"no",text:"Heck No!"}, {id:"maybe",text:"Maybe So"}, {id:"yes",text:"Let's Go!"}],
                 ty: "(Again, very unfair. But thank you for your answer.)"
             },
             
@@ -138,8 +139,8 @@
                 id: "e3",
                 t: "msg",
                 n: "The job of acchitects.",
-                msg: "The primary job of architects to to protect the enterprise from the future.",
-                opts: ["Agree", "Disagree"],
+                msg: "The primary job of architects to \"protect the enterprise from the future.\"",
+                opts: [{id:"agree",text:"Agree"}, {id:"disagree",text:"Disagree"}],
                 ty: "We hope you agree with us on this one."
             },
             
@@ -148,7 +149,7 @@
                 t: "msg",
                 n: "TMNT. Take a side.",
                 msg: "TMNT. Take a side.",
-                opts: ["Dumb", "Really dumb"],
+                opts: [{id:"dumb",text:"Dumb"}, {id:"reallydumb",text:"Really dumb"}],
                 ty: "Jason doesn't know I put this question in."
             },
             
@@ -168,7 +169,8 @@
             
         ];
 
-        const adminpass = "Plymouth45!";
+        const adminpass = "Plymouth45!"; // FIXME
+        
         /* Copyright 2017 Andrey Sitnik <andrey@sitnik.ru> */
         const nanoid = (t=21)=>crypto.getRandomValues(new Uint8Array(t)).reduce(((t,e)=>t+=(e&=63)<36?e.toString(36):e<62?(e-26).toString(36).toUpperCase():e>62?"-":"_"),"");
         let unid = localStorage.getItem('unid');
@@ -183,7 +185,8 @@
         let table = document.querySelector("p");
 
         const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid);
-        mqtt.connect({ userName: "adminapp", password: adminpass,
+        mqtt.connect({ keepAliveInterval: (60 * 5),
+                      userName: "adminapp", password: adminpass,
                       onSuccess: function(msg) {
                             console.log("mqtt connected");
                             mqtt.onConnectionLost = function(response) {
