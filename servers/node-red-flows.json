@@ -63,7 +63,7 @@
         "type": "debug",
         "z": "bd6df3c71e332263",
         "name": "Mosquitto msg",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -200,8 +200,8 @@
         "correl": "",
         "expiry": "",
         "broker": "ec316c01587be078",
-        "x": 490,
-        "y": 200,
+        "x": 550,
+        "y": 160,
         "wires": []
     },
     {
@@ -211,13 +211,13 @@
         "name": "admin state 1s",
         "props": [
             {
-                "p": "payload.ts",
-                "v": "",
-                "vt": "date"
-            },
-            {
                 "p": "payload.clients",
                 "v": "connections",
+                "vt": "global"
+            },
+            {
+                "p": "payload.votes",
+                "v": "votesCount",
                 "vt": "global"
             }
         ],
@@ -230,7 +230,8 @@
         "y": 200,
         "wires": [
             [
-                "f0024ac8ab0aca2e"
+                "f0024ac8ab0aca2e",
+                "9463233b8a6a9e70"
             ]
         ]
     },
@@ -352,11 +353,12 @@
                 "1c92a6958cdd3fe8"
             ],
             [
-                "cd814831c5ad2673"
+                "045ee2025362b1a3"
             ],
             [
                 "dafda022462fc446",
-                "c3148f0baabf752a"
+                "c3148f0baabf752a",
+                "5e76bafc7a1db044"
             ]
         ]
     },
@@ -374,8 +376,8 @@
         "correl": "",
         "expiry": "",
         "broker": "ec316c01587be078",
-        "x": 780,
-        "y": 320,
+        "x": 900,
+        "y": 220,
         "wires": []
     },
     {
@@ -413,7 +415,7 @@
         "id": "cd814831c5ad2673",
         "type": "mqtt out",
         "z": "bd6df3c71e332263",
-        "name": "big",
+        "name": "clear big",
         "topic": "big",
         "qos": "",
         "retain": "true",
@@ -423,8 +425,8 @@
         "correl": "",
         "expiry": "",
         "broker": "ec316c01587be078",
-        "x": 790,
-        "y": 400,
+        "x": 1160,
+        "y": 460,
         "wires": []
     },
     {
@@ -441,26 +443,8 @@
         "correl": "",
         "expiry": "",
         "broker": "ec316c01587be078",
-        "x": 1000,
+        "x": 1180,
         "y": 520,
-        "wires": []
-    },
-    {
-        "id": "3fc546afde2b3eab",
-        "type": "mqtt out",
-        "z": "bd6df3c71e332263",
-        "name": "big",
-        "topic": "big",
-        "qos": "",
-        "retain": "true",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "ec316c01587be078",
-        "x": 970,
-        "y": 460,
         "wires": []
     },
     {
@@ -474,12 +458,12 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 790,
-        "y": 480,
+        "x": 910,
+        "y": 460,
         "wires": [
             [
-                "3fc546afde2b3eab",
-                "d855b78211301be9"
+                "d855b78211301be9",
+                "cd814831c5ad2673"
             ]
         ]
     },
@@ -497,8 +481,8 @@
         "correl": "",
         "expiry": "",
         "broker": "ec316c01587be078",
-        "x": 790,
-        "y": 560,
+        "x": 910,
+        "y": 520,
         "wires": []
     },
     {
@@ -506,7 +490,7 @@
         "type": "function",
         "z": "bd6df3c71e332263",
         "name": "store votes",
-        "func": "if (msg.payload.qid != null && msg.payload.nid != null && msg.payload.optionid != null) {\n    // initialize once; could do elsewhere.\n    let votes = global.get('votes');\n\n    if (votes[msg.payload.qid] == null) {\n        votes[msg.payload.qid] = new Object;\n    }\n    votes[msg.payload.qid][msg.payload.nid] = msg.payload.optionid;\n\n    let votesCount = global.get('votesCount');\n    if (votesCount[msg.payload.qid] == null) {\n        votesCount[msg.payload.qid] = 0;\n    }\n    votesCount[msg.payload.qid]++;\n}\n\nreturn msg;",
+        "func": "if (msg.payload.qid != null && msg.payload.nid != null && msg.payload.optionid != null) {\n    // initialize once; could do elsewhere.\n    let votes = global.get('votes');\n\n    if (votes[msg.payload.qid] == null) {\n        votes[msg.payload.qid] = new Object;\n    }\n    votes[msg.payload.qid][msg.payload.nid] = msg.payload.optionid;\n\n    let votesCount = global.get('votesCount');\n    votesCount++;\n    global.set('votesCount', votesCount);\n    msg.votesCount = votesCount;\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -515,35 +499,8 @@
         "x": 810,
         "y": 820,
         "wires": [
-            []
-        ]
-    },
-    {
-        "id": "956eb54c1e3d1def",
-        "type": "inject",
-        "z": "bd6df3c71e332263",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 210,
-        "y": 560,
-        "wires": [
             [
-                "86c63f8226e299bc"
+                "3b2ddb3adbffc31c"
             ]
         ]
     },
@@ -552,26 +509,154 @@
         "type": "function",
         "z": "bd6df3c71e332263",
         "name": "initialize contexts",
-        "func": "// initialize once; could do elsewhere.\nlet votes = global.get('votes');\nif (votes == null) {\n    votes = new Object;\n    global.set('votes', votes);\n}\n\nlet votesCount = global.get('votesCount');\nif (votesCount == null) {\n    votesCount = new Object;\n    global.set('votesCount', votesCount);\n}\n\nreturn msg;",
+        "func": "",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "",
+        "initialize": "// initialize once; could do elsewhere.\nlet votes = global.get('votes');\nif (votes == null) {\n    votes = new Object;\n    global.set('votes', votes);\n}\n\nlet votesCount = global.get('votesCount');\nif (votesCount == null) {\n    votesCount = 0;\n    global.set('votesCount', votesCount);\n}\n",
         "finalize": "",
         "libs": [],
-        "x": 410,
-        "y": 560,
+        "x": 810,
+        "y": 60,
         "wires": [
             []
         ]
     },
     {
-        "id": "e8f04135378599a9",
+        "id": "045ee2025362b1a3",
+        "type": "function",
+        "z": "bd6df3c71e332263",
+        "name": "compute votes, reset votesCount",
+        "func": "// reset votes count (just the running count)\nglobal.set('votesCount', 0);\nmsg.payload.votesCount = 0;\n\n// count number of votes for the reveal id\nlet question = msg.payload.revid;\nif (question == null) { return msg; }\n\nlet votes = global.get('votes');\nlet counts = new Object;\n\nfor (const key in votes[question]) {\n    let vval = votes[question][key];\n    if (counts[vval] == null) { counts[vval] = 0; }\n    counts[vval]++;\n}\n\nmsg.payload.counts = counts;\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 320,
+        "wires": [
+            [
+                "bdaba4b306cdfc76",
+                "c6b1697249662049"
+            ]
+        ]
+    },
+    {
+        "id": "3b2ddb3adbffc31c",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "stats",
+        "topic": "stats",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 990,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "9463233b8a6a9e70",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "stats",
+        "topic": "stats",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 530,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "879166376fd7891a",
         "type": "comment",
         "z": "bd6df3c71e332263",
-        "name": "initialize contexts",
-        "info": "\n",
-        "x": 160,
-        "y": 520,
+        "name": "reveal",
+        "info": "",
+        "x": 750,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "5e76bafc7a1db044",
+        "type": "function",
+        "z": "bd6df3c71e332263",
+        "name": "reset all voting",
+        "func": "global.set('votes', {});\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c138f78a148bf01d",
+        "type": "comment",
+        "z": "bd6df3c71e332263",
+        "name": "clear",
+        "info": "",
+        "x": 750,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "5fa42eb3d57c998e",
+        "type": "comment",
+        "z": "bd6df3c71e332263",
+        "name": "msg",
+        "info": "",
+        "x": 750,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "bdaba4b306cdfc76",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "big",
+        "topic": "big",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 1230,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "c6b1697249662049",
+        "type": "debug",
+        "z": "bd6df3c71e332263",
+        "name": "Mosquitto msg",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1260,
+        "y": 380,
         "wires": []
     }
 ]

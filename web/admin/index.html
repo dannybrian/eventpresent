@@ -126,6 +126,17 @@
                 
             },
             
+            /*{
+                id: "e1",
+                t: "msg",
+                n: "Code, asset or liability",
+                msg: "Code is a[n]...",
+                ty: "How typical.",
+                opts: [{id:"asset",text:"Asset"}, {id:"liability",text:"Liability"}],
+                
+            },*/
+            
+            
             {
                 id: "e2",
                 t: "msg",
@@ -144,14 +155,14 @@
                 ty: "We hope you will agree with us on this one."
             },
             
-            {
+            /*{
                 id: "e4",
                 t: "msg",
                 n: "TMNT. Take a side.",
                 msg: "TMNT. Take a side.",
                 opts: [{id:"dumb",text:"Dumb"}, {id:"reallydumb",text:"Really dumb"}],
                 ty: "Jason doesn't know I put this question in."
-            },
+            },*/
             
             {
                 id: "e10",
@@ -164,12 +175,12 @@
                 id: "e20",
                 n: "Reveal Build v Buy",
                 t: "reveal",
-                showid: "e1"
+                revid: "e1"
             }
             
         ];
 
-        const adminpass = "Plymouth45!"; // FIXME
+        const adminpass = "Plymouth34"; // FIXME
         
         /* Copyright 2017 Andrey Sitnik <andrey@sitnik.ru> */
         const nanoid = (t=21)=>crypto.getRandomValues(new Uint8Array(t)).reduce(((t,e)=>t+=(e&=63)<36?e.toString(36):e<62?(e-26).toString(36).toUpperCase():e>62?"-":"_"),"");

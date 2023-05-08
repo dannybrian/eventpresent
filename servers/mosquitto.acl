@@ -37,6 +37,7 @@ topic read admin/state
 topic read user/state
 topic read big
 
+# the node-red connections
 user adminred
 topic readwrite admin/in
 topic read user/in
@@ -44,9 +45,11 @@ topic readwrite admin/state
 topic readwrite user/state
 topic readwrite user/out/+
 topic readwrite big
+topic readwrite stats
 topic read $SYS/broker/clients/connected
 
 # bigscreen app reads from big
 user big
 topic read big
-
+topic read stats
+topic read user/state
