@@ -592,7 +592,7 @@
         "type": "function",
         "z": "bd6df3c71e332263",
         "name": "reset all voting",
-        "func": "global.set('votes', {});\nreturn msg;",
+        "func": "global.set('votes', {});\nglobal.set('votesCount', 0);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
