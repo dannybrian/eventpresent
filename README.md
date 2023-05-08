@@ -24,7 +24,7 @@ The components:
 
 To get things running, you need to install nginx, Mosquitto, yarn, NodeJS, and Node-RED. Do an `npm install` in the server dir. And really, that's all. See the `start.sh` script to get rolling.
 
-The admin app prompts for a password, which needs to match the `adminapp` Mosquitto password, which you need to set using `mosquitto_passwd`. You also need to make sure the passwords match for the `adminred` user — setting it via the Mosquitto pwfile and also in the node-red flows.
+The admin app prompts for a password, which needs to match the `adminapp` Mosquitto password, which you need to set using `mosquitto_passwd`. You also need to make sure the passwords match for the `adminred` user — setting it via the Mosquitto pwfile and also in the node-red flows. When deploying, change the password in Node-RED (the config is shared between nodes) and then via `mosquitto_passwd servers/mosquitto.pwfile USERNAME` for `adminred`, `adminapp`, and `big`; then match the passwords to `admin/index.html` and `big/index.html`.
 
 There are a bunch of tests at `web/admin/test.html`. Also, all vanilla JS.
 
