@@ -169,6 +169,7 @@
                 top: 120%;
                 width: 100%;
                 text-align: center;
+                transition: opacity 0.4s;
             }
             .results .votes {
                 font-size: 120%;
@@ -355,10 +356,19 @@
         async function setReveal(message) { // call on payload.t=="reveal" via "big"
             console.log(message);
             
+            // first hide
             let results = document.querySelectorAll('.results');
             results.forEach((result, index) => {
-               
                 result.classList.remove('hidden');
+            });
+            
+            // FIXME: reset values.. there must be a better way to do this, we 
+            // have to wait for the transition...
+            results.forEach((result, index) => {
+                let votes = result.querySelector('.votes .counter');
+                votes.style.setProperty("--ccount", 0);
+                let percent = result.querySelector('.percent .counter');
+                percent.style.setProperty("--ccount", 0);
             });
             
             let totalvotes = 0;
@@ -397,12 +407,12 @@
                 // fade in
                 result.classList.add('hidden');
             });
-            message.opts.forEach((option, index) => {
-                let button = document.getElementById(`o${index}`);
-                let text = button.querySelector('.option > div');
-                text.textContent = option.text;
-                button.setAttribute('data-qid', option.id);
-            });
+            if (message.opts) {
+                message.opts.forEach((option, index) => {
+                    let button = document.getElementById(`o${index}`);
+                    button.setAttribute('data-qid', option.id);
+                });
+            }
             
             setTimeout( function() {
                 content.textContent = message.msg;
@@ -413,6 +423,8 @@
                     
                     message.opts.forEach((option, index) => {
                         let button = document.getElementById(`o${index}`);
+                        let text = button.querySelector('.option > div');
+                        text.textContent = option.text;
                         setTimeout(() => {
                             button.classList.remove('hidden');
                         }, 200 + (200 * index));
