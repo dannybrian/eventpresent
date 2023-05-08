@@ -10,6 +10,8 @@
                 --border-color: #d1d1d1;
                 --background-color: #123883;
                 --highlight-color: #ffffff;
+                --content-font-size: 7vw;
+                --option-font-size: 4vw;
             }
             * {
                 font-family: 'Source Sans Pro', sans-serif;
@@ -19,11 +21,23 @@
                 color: var(--main-text-color);
                 font-size: 18px;
             }
-            /*@media only screen and (min-width: 768px) {
-                html {
-                    zoom: 0.7;
+            @media only screen and (min-width: 800px) {
+                :root {
+                    --content-font-size: 4vw;
+                    --option-font-size: 3vw;
                 }
-            }*/
+                .option-cont {
+                    width: 20% !important;
+                    margin-top: 4% !important;
+                }
+                .option {
+                
+                }
+                #content {
+                    margin-top: 4% !important;
+                    margin-bottom: 2% !important;
+                }
+            }
             body {
                 padding: 3%;
                 margin: 2%;
@@ -36,7 +50,7 @@
                 margin-bottom: 20px;
             }
             #content {
-                font-size: 7vw;
+                font-size: var(--content-font-size);
                 margin-left: 5%;
                 margin-right: 10%;
                 margin-bottom: 10%;
@@ -112,10 +126,17 @@
 
             .counter {
               font-family: 'Source Code Pro', sans-serif;
-              color: #c4cde0;
-              transition: --ccount 1s;
               counter-set: ccount var(--ccount);
               counter-reset: ccount var(--ccount);
+            }
+            
+            .counter {
+                transition: --ccount 3s;
+            }
+            
+            .counter.stats {
+                color: #c4cde0;
+                transition: --ccount 1s;
             }
             
             .counter::after {
@@ -126,12 +147,41 @@
                 font-family: 'Source Code Pro', sans-serif;
                 font-weight: normal;
             }
-            .option {
+            .options-cont {
+                width: 100%;
+                /* background-color: aqua; */
+            }
+            .options {
+                width: 90%;
+                margin: auto;
+                /* background-color: #00ff45; */
+            }
+            .option-cont {
                 position: relative;
                 float: left;
                 width: 30%;
                 margin: 5%;
-                margin-bottom: 10%;
+                margin-bottom: 10%; 
+                transition: opacity 0.4s;
+            }
+            .option-cont .results {
+                position: absolute;
+                top: 120%;
+                width: 100%;
+                text-align: center;
+            }
+            .results .votes {
+                font-size: 120%;
+                color: #cecece;
+            }
+            .results .percent {
+                color: #fff;
+                font-size: 250%;
+                font-family: 'Source Code Pro', sans-serif;
+                font-weight:bold;
+            }
+
+            .option {
                 border-style: solid;
                 border-width: 5px;
                 border-color: var(--border-color);
@@ -144,15 +194,15 @@
                 cursor: pointer; 
                 transition: background 0.5s;
                 color: #000;
-                font-size: 5vw;
+                font-size: var(--option-font-size);
                 transition: opacity 0.4s;
             }
-            .option.odd {
+            /* .option.odd {
                 position:relative;
                 margin: auto;
                 clear: both;
                 float: none;
-            }
+            }*/
             .option:after {
                 content: "";
                 display: block;
@@ -188,26 +238,56 @@
         <!--<h1><span class="fixed">A Quick Survey</span></h1>-->
         
         <div id="clients">
-            Connections: <span class="counter" id="ccounter"></span>
+            Connections: <span class="counter stats" id="ccounter"></span>
         </div>
         
         <div id="votes">
-            Votes: <span class="counter" id="vcounter"></span>
+            Votes: <span class="counter stats" id="vcounter"></span>
         </div>
         
         <div id="content" class="hidden">
             Welcome, and thank you for participating in this quick survey!
         </div>
         
-        <div id="o0" class="option hidden"><div>Here is option number 1.</div></div>
-        <div id="o1" class="option hidden"><div>Heck no!</div></div>
-        <div id="o2" class="option odd hidden"><div>Here is an odd option number 3.</div></div>
+        <div class="options-cont">
+            <div class="options">
+                <div id="o0" class="option-cont hidden">
+                    <div class="option">
+                        <div>Here is option number 1.</div>
+                    </div>
+                    <div class="results hidden">
+                        <div class="votes"><span class="counter" id="o0-votes"></span> VOTES</div>
+                        <div class="percent"><span class="counter" id="o0-percent"></span>%</div>
+                    </div>
+                </div>
+                
+                <div id="o1" class="option-cont hidden">
+                    <div class="option">
+                        <div>Here is option number 2.</div>
+                    </div>
+                    <div class="results hidden">
+                        <div class="votes"><span class="counter" id="o1-votes"></span> VOTES</div>
+                        <div class="percent"><span class="counter" id="o1-percent"></span>%</div>
+                    </div>
+                </div>
+                
+                <div id="o2" class="option-cont hidden">
+                    <div class="option">
+                        <div>Here is option number 3.</div>
+                    </div>
+                    <div class="results hidden">
+                        <div class="votes"><span class="counter" id="o2-votes"></span> VOTES</div>
+                        <div class="percent"><span class="counter" id="o2-percent"></span>%</div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
         
         <div id="ty" class="hidden">
             Thank you
         </div>
         
-        <template><div class="row"><div class="column left"><p>Hi</p></div><div class="column"><div class="button">GO</div><a><div class="result"></div></a></div></div></template>
         <p></p>
     </body>
     <script type="application/javascript" src="../lib/mqttws31.min.js"></script>
@@ -239,10 +319,10 @@
                                     console.log("onConnectionLost:"+response.errorMessage);
                                 }
                             }
+                            mqtt.subscribe('user/state');
                             mqtt.subscribe('big');
                             mqtt.subscribe('stats');
-                            mqtt.subscribe('user/state');
-                           
+                            
                             mqtt.onMessageArrived = function (message) { 
                                 let payload = JSON.parse(message.payloadString);
                                 switch (message.destinationName) {
@@ -260,6 +340,10 @@
                                         break;
                                         
                                     case "big":
+                                        if (payload.t === "reveal") {
+                                            // show votes
+                                            setReveal(payload);
+                                        }
                                         break;
                                     default:
                                 }
@@ -268,11 +352,34 @@
                       onFailure: function(msg) { console.log("mqtt connection failed: " + JSON.stringify(msg)) }
                      });
         
-        window.onload = function() {
+        async function setReveal(message) { // call on payload.t=="reveal" via "big"
+            console.log(message);
             
+            let results = document.querySelectorAll('.results');
+            results.forEach((result, index) => {
+               
+                result.classList.remove('hidden');
+            });
+            
+            let totalvotes = 0;
+            for (const qid in message.counts) {
+                totalvotes += message.counts[qid];
+                console.log(totalvotes);
+            }
+            
+            for (const qid in message.counts) {
+                // console.log(`HERE: ${qid} === ${message.counts[qid]}`);
+                let result = document.querySelector(`.option-cont[data-qid='${qid}']`);
+                if (result != undefined) {
+                    let votes = result.querySelector('.votes .counter');
+                    votes.style.setProperty("--ccount", message.counts[qid]);
+                    let percent = result.querySelector('.percent .counter');
+                    percent.style.setProperty("--ccount", Math.floor(message.counts[qid] / totalvotes * 100));
+                }
+            }
         }
         
-        async function setPrompt(message) {
+        async function setPrompt(message) { // called on payload.t=="msg" via "user/state"
             console.log(message);
             
             let content = document.getElementById('content');
@@ -280,48 +387,28 @@
             content.classList.add('hidden');
             ty.classList.add('hidden');
             
-            let buttons = document.querySelectorAll('.option');
+            let buttons = document.querySelectorAll('.option-cont');
             buttons.forEach((button, index) => {
                 // fade out the visible
                 button.classList.add('hidden');
             });
-
+            let results = document.querySelectorAll('.results');
+            results.forEach((result, index) => {
+                // fade in
+                result.classList.add('hidden');
+            });
+            message.opts.forEach((option, index) => {
+                let button = document.getElementById(`o${index}`);
+                let text = button.querySelector('.option > div');
+                text.textContent = option.text;
+                button.setAttribute('data-qid', option.id);
+            });
+            
             setTimeout( function() {
                 content.textContent = message.msg;
                 if (message.opts != null) {
                     let count = message.opts.length;
 
-                    message.opts.forEach((option, index) => {
-                        let button = document.getElementById(`o${index}`);
-                        let text = button.querySelector('div');
-                        text.textContent = option.text;
-                        button.onclick = function() {
-                            console.log(button.id);
-                            buttons.forEach((ebutton, index) => {
-                                let length = 700;
-                                //console.log(button.id);
-                                //console.log(`o${index}`);
-                                if (button.id !== `o${index}`) {
-                                    length = 100 + (100 * index);
-                                }
-                                // fade out the visisble
-                                setTimeout(() => {
-                                    ebutton.classList.add('hidden');
-                                }, length);
-                            });
-                            setTimeout(() => {
-                                content.classList.add('hidden');
-                                if (message.ty != null) {
-                                    setTimeout(() => {  
-                                        ty.textContent = message.ty;
-                                        ty.classList.remove('hidden');
-                                    }, 700);
-                                }
-                            }, 300);
-
-                            sendVote(message.id, option.id);
-                        }
-                    });
                     //console.log(count);
                     
                     message.opts.forEach((option, index) => {
@@ -335,16 +422,6 @@
                 content.classList.remove('hidden');
                 
             }, 500);
-        }
-        
-        async function sendVote(qid, optionid) {
-            mqtt.send('user/in', `{ "t":"vote", "qid":"${qid}", "nid":"${unid}", "optionid":"${optionid}"}`);
-            // mqtt.send('user/in', `{"t": "ping", "nid": "${unid}" }`);
-            //events[eventnum].f(cb, eventnum);
-        }
-                        
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
         }
         
     </script>

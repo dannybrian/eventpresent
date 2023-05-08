@@ -512,7 +512,7 @@
         "func": "",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// initialize once; could do elsewhere.\nlet votes = global.get('votes');\nif (votes == null) {\n    votes = new Object;\n    global.set('votes', votes);\n}\n\nlet votesCount = global.get('votesCount');\nif (votesCount == null) {\n    votesCount = 0;\n    global.set('votesCount', votesCount);\n}\n",
+        "initialize": "// initialize once; could do elsewhere.\nlet votes = global.get('votes');\nif (votes == null) {\n    votes = new Object;\n    global.set('votes', votes);\n}\n\nlet votesCount = global.get('votesCount');\nif (votesCount == null) {\n    votesCount = 0;\n    global.set('votesCount', votesCount);\n}\n\n// TESTING\n\nvotes = {\n      e2: {\n          a: \"yes\",\n          b: \"yes\",\n          c: \"maybe\",\n          d: \"no\",\n          e: \"no\",\n          f: \"no\"\n      }\n};\nglobal.set('votes', votes);\n",
         "finalize": "",
         "libs": [],
         "x": 810,
