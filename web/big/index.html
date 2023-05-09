@@ -228,6 +228,25 @@
                 opacity: 0;
                 transition: opacity 0.4s;
             }
+            #url {
+                position: fixed;
+                top: 25%;
+                left: 17%;
+                font-weight: bold;
+                letter-spacing: 4px;
+                font-size: 600%;
+            }
+            #url div {
+                position: relative;
+                width: 50%;
+                top: 70px;
+                float: right;
+            }
+            #url img {
+                width: 250px;
+                float: left;
+                border: 20px solid #fff;
+            }
             a:link, a:visited, a:active, a:hover {
                 color: var(--main-text-color);
                 text-decoration: none;
@@ -289,7 +308,11 @@
             Thank you
         </div>
         
-        <p></p>
+        <div id="url">
+            <img src="/qr.png"/>
+            <div>g4tp.com</div>
+        </div>
+        
     </body>
     <script type="application/javascript"  src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js"></script>
     
@@ -390,7 +413,15 @@
         }
         
         async function setPrompt(message) { // called on payload.t=="msg" via "user/state"
-            console.log(message);
+            // console.log(message);
+            if (message.url === "show") {
+                document.getElementById('url').classList.remove('hidden');
+            }
+            else
+            {
+                // FIXME: this is so hacky. But I guess the whole thing is kinda hacky.
+                document.getElementById('url').classList.add('hidden');
+            }
             
             let content = document.getElementById('content');
             let ty = document.getElementById('ty');
