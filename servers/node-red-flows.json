@@ -350,7 +350,8 @@
         "y": 320,
         "wires": [
             [
-                "1c92a6958cdd3fe8"
+                "1c92a6958cdd3fe8",
+                "8cc8f5d3dfa412cc"
             ],
             [
                 "045ee2025362b1a3"
@@ -377,7 +378,7 @@
         "expiry": "",
         "broker": "ec316c01587be078",
         "x": 900,
-        "y": 220,
+        "y": 180,
         "wires": []
     },
     {
@@ -499,9 +500,7 @@
         "x": 810,
         "y": 820,
         "wires": [
-            [
-                "3b2ddb3adbffc31c"
-            ]
+            []
         ]
     },
     {
@@ -525,14 +524,14 @@
         "id": "045ee2025362b1a3",
         "type": "function",
         "z": "bd6df3c71e332263",
-        "name": "compute votes, reset votesCount",
-        "func": "// reset votes count (just the running count)\nglobal.set('votesCount', 0);\nmsg.payload.votesCount = 0;\n\n// count number of votes for the reveal id\nlet question = msg.payload.revid;\nif (question == null) { return msg; }\n\nlet votes = global.get('votes');\nlet counts = new Object;\n\nfor (const key in votes[question]) {\n    let vval = votes[question][key];\n    if (counts[vval] == null) { counts[vval] = 0; }\n    counts[vval]++;\n}\n\nmsg.payload.counts = counts;\n\nreturn msg;\n",
+        "name": "compute votes",
+        "func": "// reset votes count (just the running count)\n// FIXME: why was I resetting this on reval?\n//global.set('votesCount', 0);\n//msg.payload.votesCount = 0;\n\n// count number of votes for the reveal id\nlet question = msg.payload.revid;\nif (question == null) { return msg; }\n\nlet votes = global.get('votes');\nlet counts = new Object;\n\nfor (const key in votes[question]) {\n    let vval = votes[question][key];\n    if (counts[vval] == null) { counts[vval] = 0; }\n    counts[vval]++;\n}\n\nmsg.payload.counts = counts;\n\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 980,
+        "x": 920,
         "y": 320,
         "wires": [
             [
@@ -540,24 +539,6 @@
                 "c6b1697249662049"
             ]
         ]
-    },
-    {
-        "id": "3b2ddb3adbffc31c",
-        "type": "mqtt out",
-        "z": "bd6df3c71e332263",
-        "name": "stats",
-        "topic": "stats",
-        "qos": "",
-        "retain": "true",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "ec316c01587be078",
-        "x": 990,
-        "y": 820,
-        "wires": []
     },
     {
         "id": "9463233b8a6a9e70",
@@ -658,5 +639,22 @@
         "x": 1260,
         "y": 380,
         "wires": []
+    },
+    {
+        "id": "8cc8f5d3dfa412cc",
+        "type": "function",
+        "z": "bd6df3c71e332263",
+        "name": "reset voteCount",
+        "func": "global.set('votesCount', 0);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 240,
+        "wires": [
+            []
+        ]
     }
 ]
