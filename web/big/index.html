@@ -308,8 +308,8 @@
             Thank you
         </div>
         
-        <div id="url">
-            <img src="/qr.png"/>
+        <div id="url" class="hidden">
+            <img src="./qr.png"/>
             <div>g4tp.com</div>
         </div>
         
@@ -419,7 +419,7 @@
             }
             else
             {
-                // FIXME: this is so hacky. But I guess the whole thing is kinda hacky.
+                // FIXME: this is so hackey. But I guess the whole thing is kinda hacky.
                 document.getElementById('url').classList.add('hidden');
             }
             
@@ -443,6 +443,9 @@
                     let button = document.getElementById(`o${index}`);
                     button.setAttribute('data-qid', option.id);
                 });
+            }
+            if (message.url === "show") { 
+                return; // so hackey, but skip the message for big
             }
             
             setTimeout( function() {
