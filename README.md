@@ -30,7 +30,7 @@ The admin app prompts for a password, which needs to match the `adminapp` Mosqui
 
 There are a bunch of tests at `web/admin/test.html`. Also, all vanilla JS.
 
-From that point, everything is driven via the presentation "script" in `web/admin/index.js`. (TODO: move that to its own file.) The admin app sends events to Mosquitto, and from there they get routed to audience and big screen.
+From that point, everything is driven via the presentation "script" in `web/admin/script.js`. The admin app sends events over WebSocket to Mosquitto, and from there they get routed to audience and big screen.
 
 ## Build
 
