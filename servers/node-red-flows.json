@@ -645,7 +645,7 @@
         "type": "function",
         "z": "bd6df3c71e332263",
         "name": "reset voteCount",
-        "func": "global.set('votesCount', 0);\n",
+        "func": "global.set('votesCount', 0);\n\n// clear retained big message\nmsg.payload = {};\nreturn msg;\n\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -654,7 +654,27 @@
         "x": 920,
         "y": 240,
         "wires": [
-            []
+            [
+                "538faac8870bc929"
+            ]
         ]
+    },
+    {
+        "id": "538faac8870bc929",
+        "type": "mqtt out",
+        "z": "bd6df3c71e332263",
+        "name": "clear big",
+        "topic": "big",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ec316c01587be078",
+        "x": 1120,
+        "y": 240,
+        "wires": []
     }
 ]
