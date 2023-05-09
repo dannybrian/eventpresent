@@ -1,0 +1,31 @@
+# On my 2GB Ubuntu instance:
+
+% siege --delay=0.5 --internet --verbose --reps=100 --concurrent=1000 --no-parser http://g4tp.com
+
+Transactions:                 100000 hits
+Availability:                 100.00 %
+Elapsed time:                  64.14 secs
+Data transferred:            1044.37 MB
+Response time:                  0.33 secs
+Transaction rate:            1559.09 trans/sec
+Throughput:                    16.28 MB/sec
+Concurrency:                  507.44
+Successful transactions:      100000
+Failed transactions:               0
+Longest transaction:            7.52
+Shortest transaction:           0.00
+
+% $HOME/go/bin/mqtt-benchmark  --count 100 --size 100 --clients 2000 --broker g4tp.com:1883
+
+========= TOTAL (1000) =========
+Total Ratio:                 1.000 (100000/100000)
+Total Runtime (sec):         101.464
+Average Runtime (sec):       100.563
+Msg time min (ms):           0.069
+Msg time max (ms):           146.440
+Msg time mean mean (ms):     1.642
+Msg time mean std (ms):      0.439
+Average Bandwidth (msg/sec): 0.994
+Total Bandwidth (msg/sec):   994.417
+
+
