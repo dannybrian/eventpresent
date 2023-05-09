@@ -2,9 +2,9 @@
 <html lang="en">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <head>
-        <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:500,700' rel='stylesheet' type='text/css'>
-        <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400&display=swap');
+
             :root {
                 --main-text-color: #f0f0f0;
                 --border-color: #d1d1d1;
@@ -173,8 +173,8 @@
     </body>
     <script type="application/javascript"  src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js"></script>
     
-    <script type="application/javascript" inline="inline">
-        "use strict;"
+    <script type="application/javascript" type="module">
+        "use strict";
         
         /* Copyright 2017 Andrey Sitnik <andrey@sitnik.ru> */
         const nanoid = (t=21)=>crypto.getRandomValues(new Uint8Array(t)).reduce(((t,e)=>t+=(e&=63)<36?e.toString(36):e<62?(e-26).toString(36).toUpperCase():e>62?"-":"_"),"");
