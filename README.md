@@ -4,12 +4,12 @@ A simple (?) audience interactivity solution intended for custom-developed overl
 presentations. This is an evolution of something I've been doing in my own presentations for
 a long time, but more flexible and stable than what I'd built previously.
 
-The components:
+## The Components
 
 * The big screen presentation at `web/big/`. One of my goals here was to have zero UI dependencies,
-  and I achieved that pretty easily with Custom Elements. All the frontends use the Paho MQTT client (32K).
+  and I achieved that pretty easily. All the frontends use the Paho MQTT client (32K), loaded via CDN.
 
-* The audience app at `web/`. This is a PWA that prompts users with questions. Also zero UI dependencies.
+* The audience app at `web/`. This is a PWA that prompts users with questions. Also zero UI dependencies. The `index.html` gets generated via `index-src.html` using Parcel.
 
 * The speaker app at `web/admin/`. This is a PWA. It controls everything else as an authenticated admin user.
 
@@ -22,15 +22,19 @@ The components:
 * Node-RED, which contain all the (minimal) backend logic for messages and message
   routing.
 
+## Setup
+
 To get things running, you need to install nginx, Mosquitto, yarn, NodeJS, and Node-RED. Do an `npm install` in the server dir. And really, that's all. See the `start.sh` script to get rolling.
 
 The admin app prompts for a password, which needs to match the `adminapp` Mosquitto password, which you need to set using `mosquitto_passwd`. You also need to make sure the passwords match for the `adminred` user — setting it via the Mosquitto pwfile and also in the node-red flows. When deploying, change the password in Node-RED (the config is shared between nodes) and then via `mosquitto_passwd servers/mosquitto.pwfile USERNAME` for `adminred`, `adminapp`, and `big`; then match the passwords to `web/admin/index.html` and `web/big/index.html`.
 
 There are a bunch of tests at `web/admin/test.html`. Also, all vanilla JS.
 
-From that point, everything is driven via the presentation "script" in `web/admin/index.html`. I need to move that to a separate script. The admin app sends events to Mosquitto, and from there they get routed to audience and big screen.
+From that point, everything is driven via the presentation "script" in `web/admin/index.js`. (TODO: move that to its own file.) The admin app sends events to Mosquitto, and from there they get routed to audience and big screen.
 
-Lastly, use `yarn parcel web/index.html` to serve a build, and `yarn parcel build web/index.html` to built to `./dist`.
+## Build
+
+Use `yarn parcel src/index.html` to serve a build, and `yarn parcel build --dist-dir web/ src/index.html` to build to `web/index.html`. The other apps (`big/` and `admin/`) aren't built, and don't need to be.
 
 ## Tips
 
