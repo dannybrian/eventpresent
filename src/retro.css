@@ -105,7 +105,7 @@ p {
     cursor: pointer;
     color: #000;
     font-size: 6vw;
-    transition: background 0.5s, opacity 0.4s;
+    transition: all 0.4s;
 }
 .option.odd {
     position:relative;
@@ -129,7 +129,7 @@ p {
     pointer-events: pointer;
     user-select: none;
 }
-.option:active, .option:hover {
+.option:active {
     background-color: var(--highlight-color);
     transition: background 0s;
 }
