@@ -130,7 +130,7 @@ p {
     pointer-events: pointer;
     user-select: none;
 }
-.option:active {
+.option:active, .option:hover {
     background-color: var(--highlight-color);
     transition: background 0s;
 }
