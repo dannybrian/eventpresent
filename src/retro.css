@@ -102,11 +102,10 @@ p {
     padding: 10px;
     font-weight:bold;
     text-decoration: none;
-    cursor: pointer; 
-    transition: background 0.5s;
+    cursor: pointer;
     color: #000;
     font-size: 6vw;
-    transition: opacity 0.4s;
+    transition: background 0.5s, opacity 0.4s;
 }
 .option.odd {
     position:relative;
