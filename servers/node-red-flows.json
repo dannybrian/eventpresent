@@ -645,7 +645,7 @@
         "type": "function",
         "z": "bd6df3c71e332263",
         "name": "reset voteCount",
-        "func": "global.set('votesCount', 0);\n\n// clear retained big message\nmsg.payload = {};\nreturn msg;\n\nreturn msg;\n",
+        "func": "global.set('votesCount', 0);\n\n// clear retained big message\nmsg.payload = {};\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
