@@ -42,7 +42,9 @@
         }
 
 	const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
-        mqtt.connect({ useSSL: (ssl ? true : false), keepAliveInterval: (60 * 5),
+        mqtt.connect({ useSSL: (ssl ? true : false),
+                       keepAliveInterval: (60 * 5),
+                       reconnect : true,
                        onSuccess: function(msg) {
                             console.log("mqtt connected");
                             mqtt.onConnectionLost = function(response) {

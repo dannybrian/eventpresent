@@ -24,46 +24,47 @@
     const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
     mqtt.connect({ 
 	          useSSL: (ssl ? true : false),
-	          keepAliveInterval: (60 * 5),
-                  userName: "adminapp", password: adminpass,
-                  onSuccess: function(msg) {
-                        console.log("mqtt connected");
-                        mqtt.onConnectionLost = function(response) {
-                            if (response.errorCode !== 0) {
-                                console.log("onConnectionLost:"+response.errorMessage);
-                            }
+	          keepAliveInterval: (60 * 60),
+              reconnect : true,     
+              userName: "adminapp", password: adminpass,
+              onSuccess: function(msg) {
+                    console.log("mqtt connected");
+                    mqtt.onConnectionLost = function(response) {
+                        if (response.errorCode !== 0) {
+                            console.log("onConnectionLost:"+response.errorMessage);
                         }
-                        mqtt.subscribe('user/state');
-                        mqtt.subscribe('admin/state');
-                        mqtt.subscribe('big');
-                        mqtt.onMessageArrived = function (message) { 
-                            let payload = JSON.parse(message.payloadString);
-                            switch (message.destinationName) {
-                                case "user/state":
-                                    // highlight the successful round trip
-                                    clearHighlights("user");
-                                    highlightEvent(payload.id, "user");
-                                    break;
-                                case "admin/state":
-                                    if (payload.t === "clear") {
-                                        // highlightEvent(payload.id, "big");
-                                        clearHighlights();
-                                    }
-                                    // console.log(payload.clients);
-                                    break;
-                                case "big":
-                                    if (payload.t === "reveal") {
-                                        clearHighlights("big");
-                                        highlightEvent(payload.id, "big");
-                                    }
-                                    // console.log(payload.clients);
-                                    break;
-                                default:
-                            }
-                        };
-                  },
-                  onFailure: function(msg) { console.log("mqtt connection failed: " + JSON.stringify(msg)) }
-            });
+                    }
+                    mqtt.subscribe('user/state');
+                    mqtt.subscribe('admin/state');
+                    mqtt.subscribe('big');
+                    mqtt.onMessageArrived = function (message) { 
+                        let payload = JSON.parse(message.payloadString);
+                        switch (message.destinationName) {
+                            case "user/state":
+                                // highlight the successful round trip
+                                clearHighlights("user");
+                                highlightEvent(payload.id, "user");
+                                break;
+                            case "admin/state":
+                                if (payload.t === "clear") {
+                                    // highlightEvent(payload.id, "big");
+                                    clearHighlights();
+                                }
+                                // console.log(payload.clients);
+                                break;
+                            case "big":
+                                if (payload.t === "reveal") {
+                                    clearHighlights("big");
+                                    highlightEvent(payload.id, "big");
+                                }
+                                // console.log(payload.clients);
+                                break;
+                            default:
+                        }
+                    };
+              },
+              onFailure: function(msg) { console.log("mqtt connection failed: " + JSON.stringify(msg)) }
+        });
 
     // create list of tests
     events.forEach((test, index) => {
