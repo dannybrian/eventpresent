@@ -19,7 +19,7 @@
 
     let template = document.getElementsByTagName("template")[0];
     let rowtemplate = template.content.querySelector("div");
-    let table = document.querySelector("p");
+    let table = document.querySelector("body");
 
     const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
     mqtt.connect({ 
@@ -41,17 +41,20 @@
                             switch (message.destinationName) {
                                 case "user/state":
                                     // highlight the successful round trip
-                                    highlightEvent(payload.id);
+                                    clearHighlights("user");
+                                    highlightEvent(payload.id, "user");
                                     break;
                                 case "admin/state":
                                     if (payload.t === "clear") {
-                                        highlightEvent(payload.id);
+                                        // highlightEvent(payload.id, "big");
+                                        clearHighlights();
                                     }
                                     // console.log(payload.clients);
                                     break;
                                 case "big":
                                     if (payload.t === "reveal") {
-                                        highlightEvent(payload.id);
+                                        clearHighlights("big");
+                                        highlightEvent(payload.id, "big");
                                     }
                                     // console.log(payload.clients);
                                     break;
@@ -85,13 +88,29 @@
         //events[eventnum].f(cb, eventnum);
     }
 
-    function highlightEvent(id) {
+    function highlightEvent(id, type) {
+        //console.log(id);
         if (id !== null) {
             let tr = document.getElementById(id);
             if (tr !== null) {
                 tr.classList.add('highlight');
+                tr.classList.add(type);
             }
         }
+    }
+    
+    function clearHighlights(type) {
+        var rows;
+        if (type != undefined) {
+            rows = document.querySelectorAll('.row.' + type);
+        }
+        else
+        {
+            rows = document.querySelectorAll('.row');
+        }
+        rows.forEach((tr) => {
+            tr.classList.remove('highlight', 'user', 'big');
+        });
     }
 
 })();

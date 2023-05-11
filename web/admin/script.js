@@ -21,7 +21,7 @@
             t: "msg",
             n: "Build versus Buy! Pick a side.",
             msg: "Build versus Buy! Pick a side.",
-            ty: "(We know that was an unfair question. Sorry.)",
+            ty: "(We know that was an unfair question. Sorry.) 😊",
             opts: [{id:"buy",text:"Build"}, {id:"build",text:"Buy"}],
 
         },
@@ -49,7 +49,7 @@
             t: "msg",
             n: "Low-Code! Take a side.",
             msg: "Low-Code? Take a side.",
-            opts: [{id:"no",text:"Heck No!"}, {id:"maybe",text:"Maybe So"}, {id:"yes",text:"Let's Go!"}],
+            opts: [{id:"no",text:"Heck No!"}, {id:"maybe",text:"Maybe So"}, {id:"yes",text:"Let's Go!"}, {id:"hmm",text:"No idea"}],
             ty: "(Again, very unfair. But thank you for your answer.)"
         },
 

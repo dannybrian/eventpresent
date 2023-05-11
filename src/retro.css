@@ -22,6 +22,13 @@ html {
         width: 20% !important;
         margin-top: 4% !important;
     }
+    
+    /*
+    .option.break {
+        clear: left;
+    }
+    */
+    
     #content {
         margin-top: 4% !important;
         margin-bottom: 2% !important;
@@ -94,7 +101,7 @@ p {
     float: left;
     width: 30%;
     margin: 5%;
-    margin-bottom: 10%;
+    margin-bottom: 5%;
     border-style: solid;
     border-width: 5px;
     border-color: var(--border-color);
@@ -106,12 +113,6 @@ p {
     color: #000;
     font-size: 6vw;
     transition: all 0.4s;
-}
-.option.odd {
-    position:relative;
-    margin: auto;
-    clear: both;
-    float: none;
 }
 .option:after {
     content: "";

@@ -52,6 +52,16 @@
                     </div>
                 </div>
                 
+                <div id="o3" class="option-cont hidden">
+                    <div class="option">
+                        <div>Here is option number 4.</div>
+                    </div>
+                    <div class="results hidden">
+                        <div class="votes"><span class="counter" id="o3-votes"></span> VOTES</div>
+                        <div class="percent"><span class="counter" id="o3-percent"></span>%</div>
+                    </div>
+                </div>
+                
             </div>
         </div>
         
@@ -187,10 +197,15 @@
             buttons.forEach((button, index) => {
                 // fade out the visible
                 button.classList.add('hidden');
+                // remove from the flow
+                setTimeout(() => {
+                    button.classList.add('gone');
+                }, 200);
+                
             });
             let results = document.querySelectorAll('.results');
             results.forEach((result, index) => {
-                // fade in
+                // fade out
                 result.classList.add('hidden');
             });
             if (message.opts) {
@@ -214,6 +229,7 @@
                         let button = document.getElementById(`o${index}`);
                         let text = button.querySelector('.option > div');
                         text.textContent = option.text;
+                        button.classList.remove('gone');
                         setTimeout(() => {
                             button.classList.remove('hidden');
                         }, 200 + (200 * index));

@@ -34,16 +34,23 @@ h1 {
     clear: both;
 }
 .row {
-    width: 90%;
+    width: 95%;
     padding: 2%;
     margin: 2%;
     border-radius: 5px;
 }
-.row.highlight {
+.row.highlight.big {
+    background-color: #81d1e0;
+}
+.row.highlight.user {
     background-color: #b0e081;
 }
+
+.result {
+    float: left;
+    margin-top: 20px;
+}
 p {
-    width: 100%;
     margin-left: 3%;
     margin-right: 3%;
 }

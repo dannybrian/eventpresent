@@ -22,7 +22,7 @@ html {
         --option-font-size: 3vw;
     }
     .option-cont {
-        width: 20% !important;
+        width: 17% !important;
         margin-top: 4% !important;
     }
     .option {
@@ -36,6 +36,7 @@ html {
 body {
     padding: 3%;
     margin: 2%;
+    width: 100%;
 }
 h1 {
     align-content: center;
@@ -140,13 +141,16 @@ p {
     font-weight: normal;
 }
 .options-cont {
-    width: 100%;
+    width: 90%;
+    display: inline-block;
     /* background-color: aqua; */
 }
 .options {
-    width: 80%;
+    width: 100%;
     margin: auto;
-    background-color: #00ff45;
+    /* background-color: #00ff45; */
+    display: flex;
+    justify-content: center;
 }
 .option-cont {
     position: relative;
@@ -216,6 +220,9 @@ p {
 .hidden {
     opacity: 0;
     transition: opacity 0.4s;
+}
+.gone {
+    display: none;
 }
 #url {
     position: fixed;
