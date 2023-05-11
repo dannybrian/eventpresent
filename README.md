@@ -1,26 +1,20 @@
 # eventPresent
 
-A simple (?) audience interactivity solution intended for custom-developed overlays to full-screen
-presentations. This is an evolution of something I've been doing in my own presentations for
-a long time, but more flexible and stable than what I'd built previously.
+A simple (?) audience interactivity solution intended for custom-developed overlays to full-screen presentations. This is an evolution of something I've been doing in my own presentations for a long time, but more flexible and stable than what I'd built previously.
 
 ## The Components
 
-* The big screen presentation at `web/big/`. One of my goals here was to have zero UI dependencies,
-  and I achieved that pretty easily. All the frontends use the Paho MQTT client (32K), loaded via CDN.
+* The big screen presentation at `web/big/`. One of my goals here was to have zero UI dependencies, and I achieved that pretty easily. All the frontends use the Paho MQTT client (32K), loaded via CDN.
 
-* The audience app at `web/`. This is a PWA that prompts users with questions. Also zero UI dependencies. The `index.html` gets generated via `index-src.html` using Parcel.
+* The audience app at `web/`. This app prompts users with questions. Also zero UI dependencies. The `index.html` gets generated via `index-src.html` using Parcel.
 
-* The speaker app at `web/admin/`. This is a PWA. It controls everything else as an authenticated admin user.
+* The speaker app at `web/admin/`. It controls everything else as an authenticated admin user.
 
-* An nginx web server for static assets, and reverse proxy for WebSocket.
+* An nginx web server for static assets, and reverse proxy for WebSocket/MQTT.
 
-* A Mosquitto server, which allows the Node servers to communicate. I considered using 
-  MQTT also from all the apps, if only as insurance for the connection volume and payloads.
-  But I decided to just use it for backend stuff.
+* Node-RED, which contain all the (minimal) backend logic for messages and message routing.
 
-* Node-RED, which contain all the (minimal) backend logic for messages and message
-  routing.
+* A Mosquitto server, which connects all clients and NODE-RED.
 
 ## Setup
 
@@ -47,5 +41,8 @@ It's easier to troubleshoot with MQTT if you listen for events:
 
 ## Caveats
 
-There is little access control here; any user can delete their ID from localStorage and have a new session. This is intentional, to allow for broad anonymous access. This obviously wouldn't be accepetable for anything long-lived, and there is bound to be hack potential.
+There is little enforcement here; any user can delete their ID from localStorage and have a new session. This is intentional, to allow for broad anonymous access. This obviously wouldn't be accepetable for anything long-lived, and there is bound to be hack potential.
+
+I'm not entirely clear how Node-RED stores the MQTT server credentials, but I've found it periodically necessary to resupply Node-RED the mosquitto credentials after a restart. If things aren't working, re-login using one of the MQTT nodes in the flow.
+
 
