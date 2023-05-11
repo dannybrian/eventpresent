@@ -75,8 +75,7 @@
         </div>
         
     </body>
-    <script type="application/javascript"  src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js"></script>
-    
+    <script type="application/javascript"  src="/paho-mqtt.min.js"></script>
     <script type="application/javascript">
         "use strict";
         
@@ -144,7 +143,7 @@
                      });
         
         async function setReveal(message) { // call on payload.t=="reveal" via "big"
-            console.log(message);
+            //console.log(message);
             
             // first hide
             let results = document.querySelectorAll('.results');
