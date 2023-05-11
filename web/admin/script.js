@@ -89,7 +89,7 @@
             id: "e10",
             t: "msg",
             n: "Thank you",
-            msg: "Thank you for participating in this survey. (And I will take pull requests!)"
+            msg: "Thank you for participating in this survey."
         },
 
     ];
