@@ -2,6 +2,10 @@
 
 A simple (?) audience interactivity solution intended for custom-developed overlays to full-screen presentations. This is an evolution of something I've been doing in my own presentations for a long time, but more flexible and stable than what I'd built previously.
 
+<img width="300" alt="image" src="https://github.com/dannybrian/eventpresent/assets/272520/94d86a19-e8d8-41d8-98db-19f6f070c731">
+<img width="290" alt="image" src="https://github.com/dannybrian/eventpresent/assets/272520/d7c9f7ec-4019-4ca9-a225-9b83116dca94">
+<img width="800" alt="image" src="https://github.com/dannybrian/eventpresent/assets/272520/6e593b41-dcc1-4214-b302-a6862653297d">
+
 ## The Components
 
 * The big screen presentation at `web/big/`. One of my goals here was to have zero UI dependencies, and I achieved that pretty easily. All the frontends use the Paho MQTT client (32K), loaded via CDN.
