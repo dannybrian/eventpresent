@@ -32,7 +32,11 @@ From that point, everything is driven via the presentation "script" in `web/admi
 
 ## Build
 
-Use `yarn parcel src/index.html` to serve a build, and `yarn parcel build --dist-dir web/ src/index.html` to build to `web/index.html`. The other apps (`big/` and `admin/`) aren't built, and don't need to be.
+Each .html file has a toggle for ssl. Use `yarn parcel src/index.html` to serve a build, and:
+
+`yarn parcel build --dist-dir web/ src/index.html`
+
+to build to `web/index.html`. The other apps (`big/` and `admin/`) aren't built, and don't need to be.
 
 ## Tips
 
