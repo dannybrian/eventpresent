@@ -86,8 +86,8 @@
         const ccounter = document.getElementById("ccounter");
         const vcounter = document.getElementById("vcounter");
 
-        const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid);
-        mqtt.connect({ keepAliveInterval: (60 * 60),
+        const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
+        mqtt.connect({ useSSL: true, keepAliveInterval: (60 * 60),
                        userName: "big", password: bigpass,
                        onSuccess: function(msg) {
                             console.log("mqtt connected");

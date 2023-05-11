@@ -63,7 +63,7 @@
         "type": "debug",
         "z": "bd6df3c71e332263",
         "name": "Mosquitto msg",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -92,7 +92,8 @@
         "y": 700,
         "wires": [
             [
-                "8d794af0862c2ffc"
+                "8d794af0862c2ffc",
+                "8d0740642e8605be"
             ]
         ]
     },
@@ -675,6 +676,23 @@
         "broker": "ec316c01587be078",
         "x": 1120,
         "y": 240,
+        "wires": []
+    },
+    {
+        "id": "8d0740642e8605be",
+        "type": "debug",
+        "z": "bd6df3c71e332263",
+        "name": "user in/out",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 290,
+        "y": 780,
         "wires": []
     }
 ]

@@ -19,8 +19,10 @@
     let rowtemplate = template.content.querySelector("div");
     let table = document.querySelector("p");
 
-    const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid);
-    mqtt.connect({ keepAliveInterval: (60 * 5),
+    const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
+    mqtt.connect({ 
+	          useSSL: true,
+	          keepAliveInterval: (60 * 5),
                   userName: "adminapp", password: adminpass,
                   onSuccess: function(msg) {
                         console.log("mqtt connected");

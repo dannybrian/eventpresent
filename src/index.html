@@ -41,8 +41,8 @@
             // this won't prevent resets or incognito mode, but don't really care.
         }
 
-        const mqtt = new Paho.MQTT.Client(location.hostname, 8090, unid);
-        mqtt.connect({ keepAliveInterval: (60 * 5),
+	const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
+        mqtt.connect({ useSSL: true, keepAliveInterval: (60 * 5),
                        onSuccess: function(msg) {
                             console.log("mqtt connected");
                             mqtt.onConnectionLost = function(response) {
