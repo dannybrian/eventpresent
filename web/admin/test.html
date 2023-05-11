@@ -101,6 +101,10 @@
     
     <script type="application/javascript">
         "use strict;"
+        
+        var ssl = false;
+        var wsurl = ssl ? `wss://${location.hostname}/ws` : `ws://${location.hostname}/ws`;
+        
         let tests = [
             // basics
             { n: "Nano ID Create", f: function(cb, index) {
@@ -115,12 +119,12 @@
             }},
             
             { n: "Create WebSocket Client", f: (cb, index) => {
-		const ws = new WebSocket(`wss://${location.hostname}/ws`);
+		const ws = new WebSocket(wsurl);
                 cb(index, ws instanceof WebSocket); 
             }},
             
             { n: "Connect WebSocket Client", f: (cb, index) => {
-		let ws = new WebSocket(`wss://${location.hostname}/ws`);
+		let ws = new WebSocket(wsurl);
                 ws.onerror = function (err) {
                     cb(index, false, "connection failed");
                     console.log(err);
@@ -132,7 +136,7 @@
             }},
             
             { n: "Admin WebSocket Auth Rejected", f: (cb, index) => {
-		let ws = new WebSocket(`wss://${location.hostname}/ws`);
+		let ws = new WebSocket(wsurl);
                 ws.onopen = function() {
                     ws.send(JSON.stringify({apass:"1234"}));
                 }
@@ -150,7 +154,7 @@
             // Paho (or something) throws a console error on disconnect, so lame.
             { n: "Connect MQTT Client", f: (cb, index) => {
 				const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 443, unid);
-                mqtt.connect({ useSSL: true, onSuccess: async function() {
+                mqtt.connect({ useSSL: (ssl ? true : false), onSuccess: async function() {
                     cb(index, mqtt.isConnected());
                 }, onFailure: function(err) {
                     cb(index, false, err.errorMessage);
@@ -159,7 +163,7 @@
 
             { n: "MQTT auth rejected",  f: (cb, index) => {
                 const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 443, unid);
-                mqtt.connect({ useSSL: true, userName: "bobby", password: "1234",
+                mqtt.connect({ useSSL: (ssl ? true : false), userName: "bobby", password: "1234",
                               onSuccess: function() { cb(index, false) },
                               onFailure: function(msg) { cb(index, true) }
                              })
@@ -167,7 +171,7 @@
             
             { n: "MQTT roundtrip ping", f: (cb, index) => {
                 const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 443, unid);
-                mqtt.connect({useSSL: true,  onSuccess: async function() {
+                mqtt.connect({ useSSL: (ssl ? true : false), onSuccess: async function() {
                     mqtt.subscribe('user/out/' + unid);
                     mqtt.onMessageArrived = function(msg) { 
                         cb(index, JSON.parse(msg.payloadString).nid === unid );
@@ -181,12 +185,12 @@
             // test retained state message; not doing much error handling here
             { n: "MQTT ping retained", f: (cb, index) => {
                 const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
-                mqtt.connect({ useSSL: true, onSuccess: async function() {
+                mqtt.connect({ useSSL: (ssl ? true : false), onSuccess: async function() {
                     mqtt.send('user/in', `{"t": "ping", "ret": true, "nid": "${unid}" }`);
                     mqtt.disconnect();
                     await sleep(500);
                     const mqtt2 = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
-                    mqtt2.connect({ useSSL: true, onSuccess: async function() {
+                    mqtt2.connect({ useSSL: (ssl ? true : false), onSuccess: async function() {
                         mqtt2.subscribe('user/out/' + unid);
                         mqtt2.onMessageArrived = function(msg2) {
                             cb(index, JSON.parse(msg2.payloadString).nid === unid )
@@ -199,7 +203,7 @@
             // test a vote
              { n: "Vote", f: (cb, index) => {
                  const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
-                 mqtt.connect({ useSSL: true, onSuccess: async function() {
+                 mqtt.connect({ useSSL: (ssl ? true : false), onSuccess: async function() {
                      mqtt.send('user/in', `{"t": "vote", "qid": "a2", "vote": "true!", "nid": "${unid}" }`);
                      await sleep(500);
                 }});

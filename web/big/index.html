@@ -70,6 +70,8 @@
     <script type="application/javascript">
         "use strict";
         
+        var ssl = false;
+        var wsurl = ssl ? `wss://${location.hostname}/ws` : `ws://${location.hostname}/ws`;
         const bigpass = "Plymouth34"; // FIXME
         
         /* Copyright 2017 Andrey Sitnik <andrey@sitnik.ru> */
@@ -87,7 +89,7 @@
         const vcounter = document.getElementById("vcounter");
 
         const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
-        mqtt.connect({ useSSL: true, keepAliveInterval: (60 * 60),
+        mqtt.connect({ useSSL: (ssl ? true : false), keepAliveInterval: (60 * 60),
                        userName: "big", password: bigpass,
                        onSuccess: function(msg) {
                             console.log("mqtt connected");

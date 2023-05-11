@@ -27,8 +27,10 @@
     
     <script type="application/javascript" type="module">
         "use strict";
+        var ssl = false;
+        var wsurl = ssl ? `wss://${location.hostname}/ws` : `ws://${location.hostname}/ws`;
         
-	document.addEventListener("touchstart", function(){}, true)
+	    document.addEventListener("touchstart", function(){}, true)
 
         /* Copyright 2017 Andrey Sitnik <andrey@sitnik.ru> */
         const nanoid = (t=21)=>crypto.getRandomValues(new Uint8Array(t)).reduce(((t,e)=>t+=(e&=63)<36?e.toString(36):e<62?(e-26).toString(36).toUpperCase():e>62?"-":"_"),"");
@@ -42,7 +44,7 @@
         }
 
 	const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
-        mqtt.connect({ useSSL: true, keepAliveInterval: (60 * 5),
+        mqtt.connect({ useSSL: (ssl ? true : false), keepAliveInterval: (60 * 5),
                        onSuccess: function(msg) {
                             console.log("mqtt connected");
                             mqtt.onConnectionLost = function(response) {
@@ -73,7 +75,7 @@
         }
         
         async function setPrompt(message) {
-            console.log(message);
+            // console.log(message);
             
             let content = document.getElementById('content');
             let ty = document.getElementById('ty');
@@ -96,7 +98,7 @@
                         let text = button.querySelector('div');
                         text.textContent = option.text;
                         button.onclick = function() {
-                            console.log(button.id);
+                            // console.log(button.id);
                             buttons.forEach((ebutton, index) => {
                                 let length = 500;
                                 //console.log(button.id);

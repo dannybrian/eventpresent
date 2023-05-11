@@ -2,6 +2,8 @@
 
 (function go() {
 
+    const ssl = false;
+    
     const adminpass = "Plymouth34"; // FIXME
 
     /* Copyright 2017 Andrey Sitnik <andrey@sitnik.ru> */
@@ -21,7 +23,7 @@
 
     const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
     mqtt.connect({ 
-	          useSSL: true,
+	          useSSL: (ssl ? true : false),
 	          keepAliveInterval: (60 * 5),
                   userName: "adminapp", password: adminpass,
                   onSuccess: function(msg) {
