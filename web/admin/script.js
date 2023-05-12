@@ -21,7 +21,7 @@
             t: "msg",
             n: "Build versus Buy! Pick a side.",
             msg: "Build versus Buy! Pick a side.",
-            ty: "(We know that was an unfair question. Sorry.) 😊",
+            ty: "(We know that was an unfair question. Sorry.)",
             opts: [{id:"buy",text:"Build"}, {id:"build",text:"Buy"}],
 
         },
