@@ -49,8 +49,12 @@ It's easier to troubleshoot with MQTT if you listen for events:
 
 ## Caveats
 
-There is little enforcement here; any user can delete their ID from localStorage and have a new session. This is intentional, to allow for broad anonymous access. This obviously wouldn't be accepetable for anything long-lived, and there is bound to be hack potential.
+* Mosquitto is configured to limit to a single connection per authenticated (or identified) users. You can't have the admin app open on multiple devices without creating a tug of war of disconnects and reconnects. Be aware, since the app reconnects automatically!
 
-I'm not entirely clear how Node-RED stores the MQTT server credentials, but I've found it periodically necessary to resupply Node-RED the mosquitto credentials after a restart. If things aren't working, re-login using one of the MQTT nodes in the flow.
+* You need high file limits set on a Linux server to scale to thousands of users via mosquitto. Most systems I've encountered limit at 1024 by default.
+
+* There is little enforcement here; any user can delete their ID from localStorage and have a new session. This is intentional, to allow for broad anonymous access. This obviously wouldn't be accepetable for anything long-lived, and there is bound to be hack potential.
+
+* I'm not entirely clear how Node-RED stores the MQTT server credentials, but I've found it periodically necessary to resupply Node-RED the mosquitto credentials after a restart. If things aren't working, re-login using one of the MQTT nodes in the flow.
 
 
