@@ -49,7 +49,7 @@
             t: "msg",
             n: "Low-Code! Take a side.",
             msg: "Low-Code? Take a side.",
-            opts: [{id:"no",text:"Heck No!"}, {id:"maybe",text:"Maybe So"}, {id:"yes",text:"Let's Go!"}, {id:"hmm",text:"No idea"}],
+            opts: [{id:"no",text:"Heck No!"}, {id:"maybe",text:"Maybe So"}, {id:"yes",text:"Let's Go!"}],
             ty: "(Again, very unfair. But thank you for your answer.)"
         },
 
