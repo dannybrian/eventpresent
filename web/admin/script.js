@@ -82,7 +82,7 @@
             n: "Are you afraid of AI?",
             msg: "Are you afraid of AI?",
             opts: [{id:"alittle",text:"A Little Bit"}, {id:"yes",text:"Terrified"},  {id:"no",text:"Bring It On"}],
-            ty: "We hope you will agree with us on this one."
+            ty: "That's understandable."
         },
 
         {
