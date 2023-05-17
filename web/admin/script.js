@@ -81,7 +81,7 @@
             t: "msg",
             n: "Are you afraid of AI?",
             msg: "Are you afraid of AI?",
-            opts: [{id:"yes",text:"Terrified"}, {id:"alittle",text:"A Little Bit"}, {id:"no",text:"Bring It On"}],
+            opts: [{id:"alittle",text:"A Little Bit"}, {id:"yes",text:"Terrified"},  {id:"no",text:"Bring It On"}],
             ty: "We hope you will agree with us on this one."
         },
 
