@@ -76,6 +76,22 @@
             revid: "e3"
         },
 
+        {
+            id: "e4",
+            t: "msg",
+            n: "Are you afraid of AI?",
+            msg: "Are you afraid of AI?",
+            opts: [{id:"yes",text:"Terrified"}, {id:"alittle",text:"A Little Bit"}, {id:"no",text:"Bring It On"}],
+            ty: "We hope you will agree with us on this one."
+        },
+
+        {
+            id: "e4.5",
+            n: "Job of architects reveal",
+            t: "reveal",
+            revid: "e3"
+        },
+        
         /*{
             id: "e4",
             t: "msg",
