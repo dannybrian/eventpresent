@@ -87,9 +87,9 @@
 
         {
             id: "e4.5",
-            n: "Job of architects reveal",
+            n: "Afraid of AI reveal",
             t: "reveal",
-            revid: "e3"
+            revid: "e4"
         },
         
         /*{
