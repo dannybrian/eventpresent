@@ -26,8 +26,10 @@
     
     <script type="application/javascript" type="module">
         "use strict";
-        var ssl = false;
-        var wsurl = ssl ? `wss://${location.hostname}/ws` : `ws://${location.hostname}/ws`;
+        //var ssl = true;
+        //var wsurl = ssl ? `wss://${location.hostname}/mqtt` : `ws://${location.hostname}/mqtt`;
+        var ssl = location.protocol==="https:";
+        var port =  ssl ? 443 : 80;
         
 	    document.addEventListener("touchstart", function(){}, true)
 
@@ -42,7 +44,7 @@
             // this won't prevent resets or incognito mode, but don't really care.
         }
 
-	const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, 80, unid);
+	const mqtt = new Paho.MQTT.Client(`${location.hostname}/mqtt`, port, unid);
         mqtt.connect({ useSSL: (ssl ? true : false),
                        keepAliveInterval: (60 * 5),
                        reconnect : true,
